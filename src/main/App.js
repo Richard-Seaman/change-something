@@ -4,13 +4,14 @@ import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 
 import store from './store/Store';
+import BaseLayout from './layouts/BaseLayout';
 
 const hist = createBrowserHistory();
 
 const App = () => (
   <Provider store={store}>
     <Router history={hist}>
-      Change Something!
+      <BaseLayout></BaseLayout>
     </Router>
   </Provider>
 );
