@@ -3,7 +3,10 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
-    match /{pledges}/{id} {
+    match /users/{userId} {
+     allow read, write: if true;
+  	}
+    match /pledges/{id} {
       allow read: if true;
     }
   }
