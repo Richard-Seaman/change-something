@@ -11,6 +11,6 @@ const firebaseConfig = {
   export default firebaseConfig;
   
   export const collections = {
-    
+    PLEDGES: 'pledges'
   };
   
