@@ -1,12 +1,9 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
-import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
 import Typography from "@material-ui/core/Typography";
 
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -22,29 +19,46 @@ const styles = theme => ({
 });
 
 const PledgeItem = props => {
-  const { classes, pledge, isChecked, onChecked, onMakeCommitment } = props;
+  const {
+    classes,
+    pledge,
+    onAddCommitment,
+    onDeleteCommitment,
+    commitment
+  } = props;
   return (
     <Card className={classes.card}>
-      <CardHeader title={pledge.title} subheader={"# commitments"} />
+      <CardHeader
+        title={pledge.title}
+        subheader={`${pledge.counter || 0} commitments`}
+      />
       <CardContent>
         {pledge.desc && (
           <Typography variant="body2" color="textSecondary" component="p">
             {pledge.desc}
           </Typography>
         )}
-
         <CostLevel level={pledge.cost} />
       </CardContent>
       <CardActions>
-        <Button className={classes.firstButton} size="small" color="primary">
+        <Button
+          className={classes.firstButton}
+          size="small"
+          color="primary"
+          onClick={() => alert("Not ready yet...")}
+        >
           Learn More
         </Button>
         <Button
           size="small"
-          color="primary"
-          onClick={() => onMakeCommitment(pledge.id)}
+          color={commitment ? "secondary" : "primary"}
+          onClick={
+            commitment
+              ? () => onDeleteCommitment(commitment)
+              : () => onAddCommitment(pledge.id)
+          }
         >
-          Make Commitment
+          {commitment ? "Revoke Commitment" : "Make Commitment"}
         </Button>
       </CardActions>
     </Card>
@@ -53,10 +67,9 @@ const PledgeItem = props => {
 
 PledgeItem.propTypes = {
   classes: PropTypes.object.isRequired,
-  isChecked: PropTypes.bool.isRequired,
-  onChecked: PropTypes.func.isRequired,
   pledge: PropTypes.object.isRequired,
-  onMakeCommitment: PropTypes.func.isRequired
+  onAddCommitment: PropTypes.func.isRequired,
+  onDeleteCommitment: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(PledgeItem);

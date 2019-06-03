@@ -5,8 +5,11 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
 
-exports.commitmentAdded = functions.firestore
-  .document("commitments/{id}")
+const region = "europe-west1";
+
+exports.commitmentAdded = functions
+  .region(region)
+  .firestore.document("commitments/{id}")
   .onCreate(async (snap, context) => {
     const newCommitment = snap.data();
     console.log("newCommitment: ", newCommitment);
@@ -19,4 +22,21 @@ exports.commitmentAdded = functions.firestore
         counter: admin.firestore.FieldValue.increment(1)
       });
     return newCommitment;
+  });
+
+exports.commitmentDeleted = functions
+  .region(region)
+  .firestore.document("commitments/{id}")
+  .onDelete(async (snap, context) => {
+    const deletedCommitment = snap.data();
+    console.log("deletedCommitment: ", deletedCommitment);
+    // Decrement the counter on the corresponding pledge documnt
+    await admin
+      .firestore()
+      .collection("pledges")
+      .doc(deletedCommitment.pledgeId)
+      .update({
+        counter: admin.firestore.FieldValue.increment(-1)
+      });
+    return deletedCommitment;
   });

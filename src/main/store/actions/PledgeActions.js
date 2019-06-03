@@ -1,7 +1,7 @@
 import * as actionTypes from "./types";
 import { collections } from "../firebaseConfig";
 
-import firebase from "firebase/app";
+//import firebase from "firebase/app";
 
 export const togglePledge = pledgeId => {
   return {
@@ -40,12 +40,12 @@ export const addCommitment = pledgeId => {
     const firestore = getFirestore();
     const userId = getState().firebase.auth.uid;
     const userDisplayName = getState().firebase.auth.displayName;
-    const commitment = {
+    const newCommitment = {
       pledgeId,
       userId,
       userDisplayName
     };
-    console.log("addCommitment: ", commitment);
+    console.log("addCommitment: ", newCommitment);
     // First check if commitment already made
     firestore
       .get({
@@ -58,13 +58,13 @@ export const addCommitment = pledgeId => {
           // Ok to add it
           firestore
             .collection(collections.COMMITMENTS)
-            .add(commitment)
+            .add(newCommitment)
             .then(res => {
               dispatch({
                 type: actionTypes.ADD_COMMITMENT_SUCCESS,
                 payload: res
               });
-              console.log("Added commitment: ", commitment);
+              console.log("Added commitment: ", newCommitment);
               // dispatch(
               //   incrementCounter(collections.PLEDGES, pledgeId, "counter", 1)
               // );
@@ -74,7 +74,7 @@ export const addCommitment = pledgeId => {
                 type: actionTypes.ADD_COMMITMENT_FAILED,
                 payload: err
               });
-              console.error("Failed to add commitment: ", commitment, err);
+              console.error("Failed to add commitment: ", newCommitment, err);
             });
         } else {
           console.error("Failed to add commitment: ", "already exists!");
@@ -82,6 +82,31 @@ export const addCommitment = pledgeId => {
       })
       .catch(err => {
         console.error("Failed to check if commitment exists: ", err);
+      });
+  };
+};
+
+export const deleteCommitment = commitment => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+    console.log("deleteCommitment: ", commitment);
+    firestore
+      .collection(collections.COMMITMENTS)
+      .doc(commitment.id)
+      .delete()
+      .then(res => {
+        dispatch({
+          type: actionTypes.DELETE_COMMITMENT_SUCCESS,
+          payload: res
+        });
+        console.log("Deleted commitment: ", commitment);
+      })
+      .catch(err => {
+        dispatch({
+          type: actionTypes.DELETE_COMMITMENT_FAILED,
+          payload: err
+        });
+        console.error("Failed to delete commitment: ", commitment, err);
       });
   };
 };

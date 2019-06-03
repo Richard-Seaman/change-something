@@ -7,7 +7,8 @@ import { Typography } from "@material-ui/core";
 const styles = theme => ({
   container: {
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    justifyContent: "center"
   }
 });
 

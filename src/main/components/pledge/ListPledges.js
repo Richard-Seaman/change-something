@@ -8,9 +8,13 @@ import { firestoreConnect } from "react-redux-firebase";
 import { collections } from "../../store/firebaseConfig";
 import PledgeItem from "./PledgeItem";
 
-import { togglePledge } from "../../store/actions/pledges";
+import { togglePledge } from "../../store/actions/PledgeActions";
 import { pixels } from "../../constants";
-import { addCommitment } from "../../store/actions/pledges";
+import {
+  addCommitment,
+  deleteCommitment
+} from "../../store/actions/PledgeActions";
+import { showLogin } from "../../store/actions/LoginActions";
 
 const styles = theme => {
   return {
@@ -27,34 +31,41 @@ const styles = theme => {
 };
 
 class ListPledges extends Component {
-  handlePledgeCheck = event => {
-    const { onTogglePledge } = this.props;
-    onTogglePledge(event.target.value);
+  handleAddCommitment = pledgeId => {
+    const { onAddCommitment, uid, onShowLogin } = this.props;
+    if (!uid) {
+      onShowLogin();
+    } else onAddCommitment(pledgeId);
   };
 
-  handleAddCommitment = pledgeId => {
-    const { onAddCommitment } = this.props;
-    onAddCommitment(pledgeId);
+  handleDeleteCommitment = commitment => {
+    const { onDeleteCommitment, uid, onShowLogin } = this.props;
+    if (!uid) {
+      onShowLogin();
+    } else onDeleteCommitment(commitment);
   };
 
   renderPledgeItems() {
-    const { pledgesFB, checked } = this.props;
-    return pledgesFB
-      .sort((a, b) =>
-        a.ordinal < b.ordinal ? -1 : a.ordinal > b.ordinal ? 1 : 0
-      )
-      .map(pledge => {
-        return (
-          <Grid item xs={12} sm={6} lg={4} key={pledge.id}>
-            <PledgeItem
-              pledge={pledge}
-              isChecked={checked[pledge.id] || false}
-              onChecked={this.handlePledgeCheck}
-              onMakeCommitment={this.handleAddCommitment}
-            />
-          </Grid>
-        );
-      });
+    const { pledgesFB, commitmentsFB, uid } = this.props;
+    const sortedPledges = [...pledgesFB].sort((a, b) =>
+      a.ordinal < b.ordinal ? -1 : a.ordinal > b.ordinal ? 1 : 0
+    );
+    console.log("sortedPledges: ", sortedPledges);
+    console.log("commitmentsFB: ", commitmentsFB);
+    return sortedPledges.map(pledge => {
+      return (
+        <Grid item xs={12} sm={6} lg={4} key={pledge.id}>
+          <PledgeItem
+            pledge={pledge}
+            commitment={commitmentsFB.find(
+              c => c.userId === uid && c.pledgeId === pledge.id
+            )}
+            onAddCommitment={this.handleAddCommitment}
+            onDeleteCommitment={this.handleDeleteCommitment}
+          />
+        </Grid>
+      );
+    });
   }
 
   render() {
@@ -79,14 +90,18 @@ ListPledges.propTypes = {
 const mapStateToProps = state => {
   return {
     checked: state.pledges.checked || {},
-    pledgesFB: state.firestore.ordered.pledges || []
+    uid: state.firebase.auth.uid,
+    pledgesFB: state.firestore.ordered.pledges || [],
+    commitmentsFB: state.firestore.ordered.commitments || []
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onTogglePledge: pledgeId => dispatch(togglePledge(pledgeId)),
-    onAddCommitment: pledgeId => dispatch(addCommitment(pledgeId))
+    onAddCommitment: pledgeId => dispatch(addCommitment(pledgeId)),
+    onDeleteCommitment: commitment => dispatch(deleteCommitment(commitment)),
+    onShowLogin: () => dispatch(showLogin())
   };
 };
 
@@ -97,10 +112,17 @@ export default compose(
   ),
   withStyles(styles),
   firestoreConnect(props => {
-    return [
-      {
-        collection: collections.PLEDGES
-      }
-    ];
+    const { uid } = props;
+    const queries = [];
+    queries.push({
+      collection: collections.PLEDGES
+    });
+    if (uid) {
+      queries.push({
+        collection: collections.COMMITMENTS,
+        where: [["userId", "==", uid]]
+      });
+    }
+    return queries;
   })
 )(ListPledges);
