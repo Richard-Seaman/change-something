@@ -9,5 +9,8 @@ service cloud.firestore {
     match /pledges/{id} {
       allow read: if true;
     }
+    match /commitments/{id} {
+      allow read, write, update, delete: if true;
+    }
   }
 }

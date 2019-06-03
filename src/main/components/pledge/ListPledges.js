@@ -10,6 +10,7 @@ import PledgeItem from "./PledgeItem";
 
 import { togglePledge } from "../../store/actions/pledges";
 import { pixels } from "../../constants";
+import { addCommitment } from "../../store/actions/pledges";
 
 const styles = theme => {
   return {
@@ -31,19 +32,29 @@ class ListPledges extends Component {
     onTogglePledge(event.target.value);
   };
 
+  handleAddCommitment = pledgeId => {
+    const { onAddCommitment } = this.props;
+    onAddCommitment(pledgeId);
+  };
+
   renderPledgeItems() {
     const { pledgesFB, checked } = this.props;
-    return pledgesFB.map(pledge => {
-      return (
-        <Grid item xs={6} key={pledge.id}>
-          <PledgeItem
-            pledge={pledge}
-            isChecked={checked[pledge.id] || false}
-            onChecked={this.handlePledgeCheck}
-          />
-        </Grid>
-      );
-    });
+    return pledgesFB
+      .sort((a, b) =>
+        a.ordinal < b.ordinal ? -1 : a.ordinal > b.ordinal ? 1 : 0
+      )
+      .map(pledge => {
+        return (
+          <Grid item xs={12} sm={6} lg={4} key={pledge.id}>
+            <PledgeItem
+              pledge={pledge}
+              isChecked={checked[pledge.id] || false}
+              onChecked={this.handlePledgeCheck}
+              onMakeCommitment={this.handleAddCommitment}
+            />
+          </Grid>
+        );
+      });
   }
 
   render() {
@@ -61,7 +72,8 @@ class ListPledges extends Component {
 ListPledges.propTypes = {
   classes: PropTypes.object.isRequired,
   checked: PropTypes.object,
-  pledgesFB: PropTypes.array
+  pledgesFB: PropTypes.array,
+  onAddCommitment: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -73,7 +85,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onTogglePledge: pledgeId => dispatch(togglePledge(pledgeId))
+    onTogglePledge: pledgeId => dispatch(togglePledge(pledgeId)),
+    onAddCommitment: pledgeId => dispatch(addCommitment(pledgeId))
   };
 };
 

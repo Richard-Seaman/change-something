@@ -25,7 +25,9 @@ const styles = theme => ({
   baseLayoutPageContainer: {
     paddingLeft: pixels.gobalSpacing,
     paddingRight: pixels.gobalSpacing,
-    display: "flex"
+    display: "flex",
+    maxWidth: pixels.maxPageWidth,
+    margin: "0 auto"
   }
 });
 

@@ -31,7 +31,8 @@ export const pixels = {
   fontSmall: "12px",
   fontNormal: "14px",
   fontLarge: "15px",
-  fontBig: "18px"
+  fontBig: "18px",
+  maxPageWidth: "1500px"
 };
 
 export const border = {
