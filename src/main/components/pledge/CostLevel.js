@@ -2,7 +2,6 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import Icon from "@material-ui/core/Icon";
-import { Typography } from "@material-ui/core";
 
 const styles = theme => ({
   container: {
@@ -19,11 +18,7 @@ const CostLevel = props => {
     icons.push(<Icon key={`costLevel${i}`}>euro_symbol</Icon>);
   }
   if (icons.length < 1) {
-    icons.push(
-      <Typography key={`costLevelFree`} variant="body2">
-        No Cost
-      </Typography>
-    );
+    icons.push(<Icon key={`costLevelFree`}>-</Icon>);
   }
   return <div className={classes.container}>{icons}</div>;
 };
