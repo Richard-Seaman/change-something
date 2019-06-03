@@ -4,7 +4,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import LoginDialog from '../components/auth/LoginDialog';
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
@@ -12,7 +11,7 @@ import { compose } from 'redux';
 
 const styles = theme => ({
     root: {
-      flexGrow: 1,
+      flexGrow: 1
     },
     menuButton: {
       marginRight: '8px',
@@ -42,7 +41,7 @@ class TopAppBar extends React.Component {
         const { open } = this.state;
         return (
           <div className={classes.root}>
-            <AppBar position="static">
+            <AppBar position="fixed">
               <Toolbar>
                 <Typography variant="h6" className={classes.title}>
                   Change Something
