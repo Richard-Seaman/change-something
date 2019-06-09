@@ -14,3 +14,8 @@ export const collections = {
   PLEDGES: "pledges",
   COMMITMENTS: "commitments"
 };
+
+export const storedAs = {
+  myCommitments: "myCommitments",
+  allPledges: "allPledges"
+};

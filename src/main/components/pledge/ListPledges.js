@@ -5,10 +5,9 @@ import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { firestoreConnect } from "react-redux-firebase";
-import { collections } from "../../store/firebaseConfig";
+import { collections, storedAs } from "../../store/firebaseConfig";
 import PledgeItem from "./PledgeItem";
 
-import { togglePledge } from "../../store/actions/PledgeActions";
 import { pixels } from "../../constants";
 import {
   addCommitment,
@@ -46,18 +45,20 @@ class ListPledges extends Component {
   };
 
   renderPledgeItems() {
-    const { pledgesFB, commitmentsFB, uid } = this.props;
-    const sortedPledges = [...pledgesFB].sort((a, b) =>
+    const {
+      [storedAs.allPledges]: pledges,
+      [storedAs.myCommitments]: myCommitments,
+      uid
+    } = this.props;
+    const sortedPledges = [...pledges].sort((a, b) =>
       a.ordinal < b.ordinal ? -1 : a.ordinal > b.ordinal ? 1 : 0
     );
-    console.log("sortedPledges: ", sortedPledges);
-    console.log("commitmentsFB: ", commitmentsFB);
     return sortedPledges.map(pledge => {
       return (
         <Grid item xs={12} sm={6} lg={4} key={pledge.id}>
           <PledgeItem
             pledge={pledge}
-            commitment={commitmentsFB.find(
+            commitment={myCommitments.find(
               c => c.userId === uid && c.pledgeId === pledge.id
             )}
             onAddCommitment={this.handleAddCommitment}
@@ -83,22 +84,25 @@ class ListPledges extends Component {
 ListPledges.propTypes = {
   classes: PropTypes.object.isRequired,
   checked: PropTypes.object,
-  pledgesFB: PropTypes.array,
-  onAddCommitment: PropTypes.func.isRequired
+  [storedAs.allPledges]: PropTypes.array,
+  [storedAs.myCommitments]: PropTypes.array,
+  onAddCommitment: PropTypes.func.isRequired,
+  onDeleteCommitment: PropTypes.func.isRequired,
+  onShowLogin: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
     checked: state.pledges.checked || {},
     uid: state.firebase.auth.uid,
-    pledgesFB: state.firestore.ordered.pledges || [],
-    commitmentsFB: state.firestore.ordered.commitments || []
+    [storedAs.allPledges]: state.firestore.ordered[storedAs.allPledges] || [],
+    [storedAs.myCommitments]:
+      state.firestore.ordered[storedAs.myCommitments] || []
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onTogglePledge: pledgeId => dispatch(togglePledge(pledgeId)),
     onAddCommitment: pledgeId => dispatch(addCommitment(pledgeId)),
     onDeleteCommitment: commitment => dispatch(deleteCommitment(commitment)),
     onShowLogin: () => dispatch(showLogin())
@@ -115,12 +119,14 @@ export default compose(
     const { uid } = props;
     const queries = [];
     queries.push({
-      collection: collections.PLEDGES
+      collection: collections.PLEDGES,
+      storeAs: storedAs.allPledges
     });
     if (uid) {
       queries.push({
         collection: collections.COMMITMENTS,
-        where: [["userId", "==", uid]]
+        where: [["userId", "==", uid]],
+        storeAs: storedAs.myCommitments
       });
     }
     return queries;
