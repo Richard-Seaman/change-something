@@ -1,16 +1,39 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
-    }
     match /users/{userId} {
-     allow read, write: if true;
+     allow read: if isOwner(userId);
+     allow write: if isOwner(userId);
   	}
     match /pledges/{id} {
       allow read: if true;
+      allow update: if isSignedIn();
     }
     match /commitments/{id} {
-      allow read, write, update, delete: if true;
+      allow read: if isSignedIn();
+      allow write: if incomingData().userId == currentUser().uid;
     }
+
+    // Functions 
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function existingData() {
+      return resource.data
+    }
+
+    function incomingData() {
+      return request.resource.data
+    }
+
+    function currentUser() {
+      return request.auth
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId
+    }
+
   }
 }
