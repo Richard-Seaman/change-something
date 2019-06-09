@@ -10,7 +10,8 @@ service cloud.firestore {
     }
     match /commitments/{id} {
       allow read: if isSignedIn();
-      allow write: if incomingData().userId == currentUser().uid;
+      allow create, update: if incomingData().userId == currentUser().uid;
+      allow delete: if existingData().userId == currentUser().uid;
     }
 
     // Functions 
