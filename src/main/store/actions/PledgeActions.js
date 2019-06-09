@@ -1,8 +1,6 @@
 import * as actionTypes from "./types";
 import { collections, storedAs } from "../firebaseConfig";
 
-import firebase from "firebase/app";
-
 export const incrementCounter = (collection, docId, field, number) => {
   return (dispatch, getState, { getFirestore }) => {
     const firestore = getFirestore();
@@ -16,7 +14,7 @@ export const incrementCounter = (collection, docId, field, number) => {
       .collection(collection)
       .doc(docId)
       .update({
-        [field]: firebase.firestore.FieldValue.increment(number)
+        [field]: firestore.FieldValue.increment(number)
       })
       .then(res => {
         dispatch({
