@@ -10,12 +10,29 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import Reward from "react-rewards";
 
-import CostLevel from "./CostLevel";
+import Level from "./Level";
 
 const styles = theme => ({
   card: {},
   firstButton: {
     marginLeft: "auto"
+  },
+  cardHeaderContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "nowrap",
+    width: "100%",
+    alignItems: "center"
+  },
+  cardHeaderTextContainer: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: "2"
+  },
+  cardHeaderSymbolContainer: {
+    display: "flex",
+    flexDirection: "column",
+    margin: "16px"
   }
 });
 
@@ -30,17 +47,27 @@ class PledgeItem extends React.Component {
     } = this.props;
     return (
       <Card className={classes.card}>
-        <CardHeader
-          title={pledge.title}
-          subheader={`${pledge.counter || 0} commitments`}
-        />
+        <div className={classes.cardHeaderContainer}>
+          <div className={classes.cardHeaderTextContainer}>
+            <CardHeader
+              title={pledge.title}
+              subheader={`${pledge.counter || 0} ${
+                pledge.counter === 1 ? "commitment" : "commitments"
+              }`}
+            />
+          </div>
+          <div className={classes.cardHeaderSymbolContainer}>
+            <Level level={pledge.cost} symbol="euro_symbol" />
+            <Level level={pledge.effort} symbol="fitness_center" />
+            <Level level={pledge.reward} symbol="grade" />
+          </div>
+        </div>
         <CardContent>
           {pledge.desc && (
             <Typography variant="body2" color="textSecondary" component="p">
               {pledge.desc}
             </Typography>
           )}
-          <CostLevel level={pledge.cost} />
         </CardContent>
         <CardActions>
           <Button
