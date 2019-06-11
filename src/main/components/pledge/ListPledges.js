@@ -65,7 +65,6 @@ class ListPledges extends Component {
   };
 
   renderPledgeItems() {
-    const { deleteDialogOpen, commitment } = this.state;
     const {
       [storedAs.allPledges]: pledges,
       [storedAs.myCommitments]: myCommitments,
@@ -85,6 +84,18 @@ class ListPledges extends Component {
             onAddCommitment={this.handleAddCommitment}
             onDeleteCommitment={this.handleShowDeleteCommitment}
           />
+        </Grid>
+      );
+    });
+  }
+
+  render() {
+    const { classes } = this.props;
+    const { deleteDialogOpen, commitment } = this.state;
+    return (
+      <div className={classes.root}>
+        <Grid container spacing={2}>
+          {this.renderPledgeItems()}
           <Dialog
             open={deleteDialogOpen}
             onClose={this.handleHideDeleteCommitment}
@@ -101,7 +112,7 @@ class ListPledges extends Component {
             <DialogActions>
               <Button
                 onClick={() => this.handleDeleteCommitment(commitment)}
-                color="error"
+                color="secondary"
               >
                 Revoke
               </Button>
@@ -114,17 +125,6 @@ class ListPledges extends Component {
               </Button>
             </DialogActions>
           </Dialog>
-        </Grid>
-      );
-    });
-  }
-
-  render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.root}>
-        <Grid container spacing={2}>
-          {this.renderPledgeItems()}
         </Grid>
       </div>
     );
