@@ -10,6 +10,8 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import Reward from "react-rewards";
 
+import { colors } from "../../constants";
+
 import Level from "./Level";
 
 const styles = theme => ({
@@ -46,7 +48,15 @@ class PledgeItem extends React.Component {
       commitment
     } = this.props;
     return (
-      <Card className={classes.card}>
+      <Card
+        className={classes.card}
+        style={
+          commitment
+            ? { background: colors.grey1 }
+            : { background: colors.grey2 }
+        }
+        raised={commitment ? true : false}
+      >
         <div className={classes.cardHeaderContainer}>
           <div className={classes.cardHeaderTextContainer}>
             <CardHeader
