@@ -7,6 +7,12 @@ import Grid from "@material-ui/core/Grid";
 import { firestoreConnect } from "react-redux-firebase";
 import { collections, storedAs } from "../../store/firebaseConfig";
 import PledgeItem from "./PledgeItem";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
 
 import { pixels } from "../../constants";
 import {
@@ -30,6 +36,11 @@ const styles = theme => {
 };
 
 class ListPledges extends Component {
+  state = {
+    deleteDialogOpen: false,
+    commitment: null
+  };
+
   handleAddCommitment = pledgeId => {
     const { onAddCommitment, uid, onShowLogin } = this.props;
     if (!uid) {
@@ -37,7 +48,16 @@ class ListPledges extends Component {
     } else onAddCommitment(pledgeId);
   };
 
+  handleShowDeleteCommitment = commitment => {
+    this.setState({ deleteDialogOpen: true, commitment });
+  };
+
+  handleHideDeleteCommitment = () => {
+    this.setState({ deleteDialogOpen: false, commitment: null });
+  };
+
   handleDeleteCommitment = commitment => {
+    this.handleHideDeleteCommitment();
     const { onDeleteCommitment, uid, onShowLogin } = this.props;
     if (!uid) {
       onShowLogin();
@@ -45,6 +65,7 @@ class ListPledges extends Component {
   };
 
   renderPledgeItems() {
+    const { deleteDialogOpen, commitment } = this.state;
     const {
       [storedAs.allPledges]: pledges,
       [storedAs.myCommitments]: myCommitments,
@@ -62,8 +83,37 @@ class ListPledges extends Component {
               c => c.userId === uid && c.pledgeId === pledge.id
             )}
             onAddCommitment={this.handleAddCommitment}
-            onDeleteCommitment={this.handleDeleteCommitment}
+            onDeleteCommitment={this.handleShowDeleteCommitment}
           />
+          <Dialog
+            open={deleteDialogOpen}
+            onClose={this.handleHideDeleteCommitment}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Do you really want to go back on your word and break your
+                commitment to help save the world?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => this.handleDeleteCommitment(commitment)}
+                color="error"
+              >
+                Revoke
+              </Button>
+              <Button
+                onClick={this.handleHideDeleteCommitment}
+                color="primary"
+                autoFocus
+              >
+                Nevermind
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Grid>
       );
     });

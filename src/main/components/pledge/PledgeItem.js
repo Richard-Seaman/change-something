@@ -106,7 +106,6 @@ class PledgeItem extends React.Component {
               onClick={
                 commitment
                   ? () => {
-                      this.reward.rewardMe();
                       onDeleteCommitment(commitment);
                     }
                   : () => {
