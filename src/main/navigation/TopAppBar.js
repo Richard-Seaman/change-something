@@ -28,7 +28,7 @@ const styles = theme => ({
 
 class TopAppBar extends React.Component {
   render() {
-    const { classes, onShowLogin, onShowNavDrawer } = this.props;
+    const { classes, onShowLogin, onShowNavDrawer, title } = this.props;
     return (
       <div className={classes.root}>
         <AppBar position="fixed">
@@ -43,7 +43,7 @@ class TopAppBar extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Change Something
+              {title}
             </Typography>
             <IconButton
               aria-haspopup="true"
@@ -66,7 +66,9 @@ TopAppBar.propTypes = {
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    title: state.nav.title
+  };
 };
 
 const mapDispatchToProps = dispatch => {

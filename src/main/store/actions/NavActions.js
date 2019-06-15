@@ -11,3 +11,10 @@ export const hideNavDrawer = () => {
     type: actionTypes.HIDE_NAV_DRAWER
   };
 };
+
+export const setTitle = title => {
+  return {
+    type: actionTypes.SET_TITLE,
+    payload: title
+  };
+};
