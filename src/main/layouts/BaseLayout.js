@@ -7,6 +7,7 @@ import { compose } from "redux";
 import renderRoutes from "../routes/renderRoutes";
 import pageRoutes from "../routes/pageRoutes";
 import TopAppBar from "../navigation/TopAppBar";
+import NavDrawer from "../navigation/NavDrawer";
 import { pixels } from "../constants";
 
 const styles = theme => ({
@@ -37,6 +38,7 @@ class BaseLayout extends Component {
     return (
       <div className={classes.baseLayoutContainer}>
         <TopAppBar />
+        <NavDrawer />
         <div className={classes.baseLayoutContentContainer}>
           <div className={classes.baseLayoutPageContainer}>
             <Switch>{renderRoutes(pageRoutes)}</Switch>

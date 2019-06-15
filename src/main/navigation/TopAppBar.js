@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -8,8 +9,10 @@ import LoginDialog from "../components/auth/LoginDialog";
 import { withStyles } from "@material-ui/styles";
 import { connect } from "react-redux";
 import { compose } from "redux";
+import MenuIcon from "@material-ui/icons/Menu";
 
-import { showLogin, hideLogin } from "../store/actions/LoginActions";
+import { showLogin } from "../store/actions/LoginActions";
+import { showNavDrawer } from "../store/actions/NavActions";
 
 const styles = theme => ({
   root: {
@@ -24,50 +27,52 @@ const styles = theme => ({
 });
 
 class TopAppBar extends React.Component {
-  handleCloseLogin = () => {
-    const { onHideLogin } = this.props;
-    onHideLogin();
-  };
-
-  handleOpenLogin = () => {
-    const { onShowLogin } = this.props;
-    onShowLogin();
-  };
-
   render() {
-    const { classes, isOpen } = this.props;
+    const { classes, onShowLogin, onShowNavDrawer } = this.props;
     return (
       <div className={classes.root}>
         <AppBar position="fixed">
           <Toolbar>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="Menu"
+              onClick={onShowNavDrawer}
+            >
+              <MenuIcon />
+            </IconButton>
             <Typography variant="h6" className={classes.title}>
               Change Something
             </Typography>
             <IconButton
               aria-haspopup="true"
-              onClick={this.handleOpenLogin}
+              onClick={onShowLogin}
               color="inherit"
             >
               <AccountCircle />
             </IconButton>
           </Toolbar>
         </AppBar>
-        <LoginDialog open={isOpen} handleClose={this.handleCloseLogin} />
+        <LoginDialog />
       </div>
     );
   }
 }
 
+TopAppBar.propTypes = {
+  onShowLogin: PropTypes.func.isRequired,
+  onShowNavDrawer: PropTypes.func.isRequired
+};
+
 const mapStateToProps = state => {
-  return {
-    isOpen: state.login.isOpen
-  };
+  return {};
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onShowLogin: () => dispatch(showLogin()),
-    onHideLogin: () => dispatch(hideLogin())
+    onShowNavDrawer: () => dispatch(showNavDrawer())
   };
 };
 
