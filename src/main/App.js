@@ -1,15 +1,11 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { Router } from "react-router-dom";
-import { createBrowserHistory } from "history";
+import { BrowserRouter } from "react-router-dom";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import orange from "@material-ui/core/colors/orange";
 
 import store from "./store/Store";
 import BaseLayout from "./layouts/BaseLayout";
-
-import orange from "@material-ui/core/colors/orange";
-
-const hist = createBrowserHistory();
 
 const theme = createMuiTheme({
   palette: {
@@ -25,11 +21,11 @@ const theme = createMuiTheme({
 
 const App = () => (
   <Provider store={store}>
-    <Router history={hist}>
+    <BrowserRouter>
       <MuiThemeProvider theme={theme}>
         <BaseLayout />
       </MuiThemeProvider>
-    </Router>
+    </BrowserRouter>
   </Provider>
 );
 export default App;

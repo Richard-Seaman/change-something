@@ -20,6 +20,8 @@ import {
   deleteCommitment
 } from "../../store/actions/PledgeActions";
 import { showLogin } from "../../store/actions/LoginActions";
+import { setTitle } from "../../store/actions/NavActions";
+import { titles } from "../../navigation/navItems";
 
 const styles = theme => {
   return {
@@ -40,6 +42,11 @@ class ListPledges extends Component {
     deleteDialogOpen: false,
     commitment: null
   };
+
+  componentDidMount() {
+    const { onSetTitle } = this.props;
+    onSetTitle(titles.pledges);
+  }
 
   handleAddCommitment = pledgeId => {
     const { onAddCommitment, uid, onShowLogin } = this.props;
@@ -138,7 +145,8 @@ ListPledges.propTypes = {
   [storedAs.myCommitments]: PropTypes.array,
   onAddCommitment: PropTypes.func.isRequired,
   onDeleteCommitment: PropTypes.func.isRequired,
-  onShowLogin: PropTypes.func.isRequired
+  onShowLogin: PropTypes.func.isRequired,
+  onSetTitle: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -155,7 +163,8 @@ const mapDispatchToProps = dispatch => {
   return {
     onAddCommitment: pledgeId => dispatch(addCommitment(pledgeId)),
     onDeleteCommitment: commitment => dispatch(deleteCommitment(commitment)),
-    onShowLogin: () => dispatch(showLogin())
+    onShowLogin: () => dispatch(showLogin()),
+    onSetTitle: title => dispatch(setTitle(title))
   };
 };
 

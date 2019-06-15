@@ -34,11 +34,11 @@ const styles = theme => ({
 
 class BaseLayout extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
     return (
       <div className={classes.baseLayoutContainer}>
         <TopAppBar />
-        <NavDrawer />
+        <NavDrawer history={history} />
         <div className={classes.baseLayoutContentContainer}>
           <div className={classes.baseLayoutPageContainer}>
             <Switch>{renderRoutes(pageRoutes)}</Switch>

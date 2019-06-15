@@ -7,12 +7,10 @@ import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 
-import { showNavDrawer, hideNavDrawer } from "../store/actions/NavActions";
+import { hideNavDrawer } from "../store/actions/NavActions";
+import { items } from "./navItems";
 
 const styles = theme => ({
   list: {
@@ -21,48 +19,55 @@ const styles = theme => ({
 });
 
 class NavDrawer extends React.Component {
-  handleToggleDrawer = isOpen => event => {
+  handleHideDrawer = () => event => {
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
     ) {
       return;
     }
-    const { onHideNavDrawer, onShowNavDrawer } = this.props;
-    if (isOpen) {
-      onShowNavDrawer();
-    } else {
-      onHideNavDrawer();
-    }
+    const { onHideNavDrawer } = this.props;
+    onHideNavDrawer();
+  };
+
+  handleSelected = item => {
+    const { history } = this.props;
+    history.push(item.link);
   };
 
   getList = () => {
-    const { classes } = this.props;
+    const { classes, currentTitle } = this.props;
+    const topListItems = items.filter(item => item.section === 0);
+    const bottomListItems = items.filter(item => item.section === 1);
     return (
       <div
         className={classes.list}
         role="presentation"
-        onClick={this.handleToggleDrawer(false)}
-        onKeyDown={this.handleToggleDrawer(false)}
+        onClick={this.handleHideDrawer()}
+        onKeyDown={this.handleHideDrawer()}
       >
-        <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
+        <List component="nav">
+          {topListItems.map(item => (
+            <ListItem
+              button
+              key={item.title}
+              selected={item.title === currentTitle}
+              onClick={() => this.handleSelected(item)}
+            >
+              <ListItemText primary={item.title} />
             </ListItem>
           ))}
         </List>
         <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
+        <List component="nav">
+          {bottomListItems.map(item => (
+            <ListItem
+              button
+              key={item.title}
+              selected={item.title === currentTitle}
+              onClick={() => this.handleSelected(item)}
+            >
+              <ListItemText primary={item.title} />
             </ListItem>
           ))}
         </List>
@@ -73,7 +78,7 @@ class NavDrawer extends React.Component {
   render() {
     const { isOpen } = this.props;
     return (
-      <Drawer open={isOpen} onClose={this.handleToggleDrawer(false)}>
+      <Drawer open={isOpen} onClose={this.handleHideDrawer()}>
         {this.getList()}
       </Drawer>
     );
@@ -82,19 +87,19 @@ class NavDrawer extends React.Component {
 
 NavDrawer.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  onShowNavDrawer: PropTypes.func.isRequired,
-  onHideNavDrawer: PropTypes.func.isRequired
+  onHideNavDrawer: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    isOpen: state.nav.isOpen
+    isOpen: state.nav.isOpen,
+    currentTitle: state.nav.title
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onShowNavDrawer: () => dispatch(showNavDrawer()),
     onHideNavDrawer: () => dispatch(hideNavDrawer())
   };
 };
