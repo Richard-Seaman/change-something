@@ -14,7 +14,6 @@ import {
   GoogleLoginButton,
   FacebookLoginButton
 } from "react-social-login-buttons";
-import Typography from "@material-ui/core/Typography";
 
 import { hideLogin } from "../../store/actions/LoginActions";
 
@@ -34,21 +33,9 @@ class LoginDialog extends Component {
       <Fragment>
         <DialogTitle id="form-dialog-title">Sign Out</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            <Typography variant="body1" component="p">
-              You are signed in as:
-            </Typography>
-            {name && (
-              <Typography variant="body1" component="p">
-                {`${name}`}
-              </Typography>
-            )}
-            {email && (
-              <Typography variant="body1" component="p">
-                {`${email}`}
-              </Typography>
-            )}
-          </DialogContentText>
+          <DialogContentText>You are signed in as:</DialogContentText>
+          {name && <DialogContentText>{`${name}`}</DialogContentText>}
+          {email && <DialogContentText>{`${email}`}</DialogContentText>}
         </DialogContent>
       </Fragment>
     );

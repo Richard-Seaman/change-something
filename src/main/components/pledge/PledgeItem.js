@@ -74,7 +74,7 @@ class PledgeItem extends React.Component {
         </div>
         <CardContent>
           {pledge.desc && (
-            <Typography variant="body2" color="textSecondary" component="p">
+            <Typography variant="body2" color="textSecondary" component="span">
               {pledge.desc}
             </Typography>
           )}
