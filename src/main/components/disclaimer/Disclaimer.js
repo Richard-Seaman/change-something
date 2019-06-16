@@ -3,12 +3,17 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
+import Typography from "@material-ui/core/Typography";
 
 import { titles } from "../../navigation/navItems";
 import { setTitle } from "../../store/actions/NavActions";
+import { typoProps } from "../../constants";
+import { commonStyles } from "../../styles";
 
 const styles = theme => {
-  return {};
+  return {
+    ...commonStyles
+  };
 };
 
 class Disclaimer extends Component {
@@ -18,7 +23,18 @@ class Disclaimer extends Component {
   }
 
   render() {
-    return <div />;
+    const { classes } = this.props;
+    return (
+      <div>
+        <Typography {...typoProps.para} className={classes.para}>
+          Nothing on this site shall be construed as legal, financial or
+          construction advice. Individuals take full responsibility for any
+          action taken as a result of reading this website or committing to any
+          actions as a result. Any construction or DIY activity has associated
+          risks and should only be carried out by a competent individual.
+        </Typography>
+      </div>
+    );
   }
 }
 

@@ -27,7 +27,6 @@ const styles = theme => ({
     paddingLeft: pixels.gobalSpacing,
     paddingRight: pixels.gobalSpacing,
     display: "flex",
-    maxWidth: pixels.maxPageWidth,
     margin: "0 auto"
   }
 });

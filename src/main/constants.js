@@ -38,3 +38,21 @@ export const pixels = {
 export const border = {
   style_1px: `solid 1px ${colors.grey2}`
 };
+
+export const typoProps = {
+  para: {
+    variant: "body1",
+    color: "inherit",
+    align: "left"
+  },
+  title: {
+    variant: "h4",
+    color: "inherit",
+    align: "left"
+  },
+  subTitle: {
+    variant: "h6",
+    color: "inherit",
+    align: "left"
+  }
+};

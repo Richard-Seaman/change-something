@@ -13,5 +13,14 @@ export const commonStyles = {
     height: pixels.contentHeight,
     display: "flex",
     background: colors.grey2
+  },
+  title: {
+    marginTop: "32px"
+  },
+  subTitle: {
+    marginTop: "24px"
+  },
+  para: {
+    marginTop: "16px"
   }
 };

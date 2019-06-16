@@ -3,12 +3,17 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
+import Typography from "@material-ui/core/Typography";
 
 import { titles } from "../../navigation/navItems";
 import { setTitle } from "../../store/actions/NavActions";
+import { typoProps } from "../../constants";
+import { commonStyles } from "../../styles";
 
 const styles = theme => {
-  return {};
+  return {
+    ...commonStyles
+  };
 };
 
 class Privacy extends Component {
@@ -18,7 +23,19 @@ class Privacy extends Component {
   }
 
   render() {
-    return <div />;
+    const { classes } = this.props;
+    return (
+      <div>
+        <Typography {...typoProps.para} className={classes.para}>
+          Facebook or Google verification is used to ensure that robots are not
+          making commitments. We will never pass on your details to third
+          parties or use your details to advertise any commercial services to
+          you. We may very occasionally send you updates relating to this
+          campaign but will never offer any service or products or ask for any
+          form of payment.
+        </Typography>
+      </div>
+    );
   }
 }
 
