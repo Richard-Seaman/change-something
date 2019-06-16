@@ -4,6 +4,7 @@ import { compose } from "redux";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 
 import { titles } from "../../navigation/navItems";
 import { setTitle } from "../../store/actions/NavActions";
@@ -15,6 +16,14 @@ const styles = theme => {
     ...commonStyles,
     root: {
       paddingBottom: "32px"
+      // display: "flex",
+      // flexDirection: "column",
+      // justifyContent: "center"
+    },
+    button: {
+      marginTop: "16px"
+      // width: "300px",
+      // alignSelf: "center"
     }
   };
 };
@@ -26,7 +35,7 @@ class Home extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
     return (
       <div className={classes.root}>
         <Typography {...typoProps.title} className={classes.title}>
@@ -56,6 +65,14 @@ class Home extends Component {
           also results in cost savings. This campaign encourages everyone to
           select changes that match their means.
         </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={() => history.push("/pledges")}
+        >
+          I'm ready to Change Something
+        </Button>
 
         <Typography {...typoProps.title} className={classes.title}>
           How this works
