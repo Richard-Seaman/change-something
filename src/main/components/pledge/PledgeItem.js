@@ -27,6 +27,10 @@ const styles = theme => ({
   commitmentsText: {
     fontSize: theme.typography.pxToRem(14),
     fontWeight: theme.typography.fontWeightLight
+  },
+  detailsText: {
+    marginBottom: "8px",
+    alignSelf: "flex-start"
   }
 });
 
@@ -39,6 +43,7 @@ class PledgeItem extends React.Component {
       onDeleteCommitment,
       commitment
     } = this.props;
+    console.log(pledge);
     return (
       <ExpansionPanel>
         <ExpansionPanelSummary
@@ -56,7 +61,13 @@ class PledgeItem extends React.Component {
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.detailsContainer}>
-          <Typography>{pledge.desc}</Typography>
+          {pledge.desc.map((para, idx) => {
+            return (
+              <Typography className={classes.detailsText} key={`desc[${idx}]`}>
+                {para}
+              </Typography>
+            );
+          })}
           <Reward
             ref={ref => {
               this.reward = ref;
