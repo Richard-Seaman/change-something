@@ -3,38 +3,32 @@ import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import Reward from "react-rewards";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-import { colors } from "../../constants";
-
-import Level from "./Level";
+import { typoProps } from "../../constants";
 
 const styles = theme => ({
-  card: {},
-  firstButton: {
-    marginLeft: "auto"
+  summaryTextContainer: {
+    flexDirection: "column"
   },
-  cardHeaderContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "nowrap",
-    width: "100%",
+  detailsContainer: {
+    flexDirection: "column",
     alignItems: "center"
   },
-  cardHeaderTextContainer: {
-    display: "flex",
-    flexDirection: "column",
-    flexGrow: "2"
+  commitButton: {
+    marginTop: "16px"
   },
-  cardHeaderSymbolContainer: {
-    display: "flex",
-    flexDirection: "column",
-    margin: "16px"
+  heading: {
+    fontWeight: theme.typography.fontWeightRegular
+  },
+  commitmentsText: {
+    fontSize: theme.typography.pxToRem(14),
+    fontWeight: theme.typography.fontWeightLight
   }
 });
 
@@ -48,46 +42,23 @@ class PledgeItem extends React.Component {
       commitment
     } = this.props;
     return (
-      <Card
-        className={classes.card}
-        style={
-          commitment
-            ? { background: colors.grey1 }
-            : { background: colors.grey2 }
-        }
-        raised={commitment ? true : false}
-      >
-        <div className={classes.cardHeaderContainer}>
-          <div className={classes.cardHeaderTextContainer}>
-            <CardHeader
-              title={pledge.title}
-              subheader={`${pledge.counter || 0} ${
-                pledge.counter === 1 ? "commitment" : "commitments"
-              }`}
-            />
+      <ExpansionPanel>
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <div className={classes.summaryTextContainer}>
+            <Typography className={classes.heading}>{pledge.title}</Typography>
+            <Typography
+              className={classes.commitmentsText}
+            >{`${pledge.counter || 0} ${
+              pledge.counter === 1 ? "commitment" : "commitments"
+            }`}</Typography>
           </div>
-          <div className={classes.cardHeaderSymbolContainer}>
-            <Level level={pledge.cost} symbol="euro_symbol" />
-            <Level level={pledge.effort} symbol="fitness_center" />
-            <Level level={pledge.reward} symbol="grade" />
-          </div>
-        </div>
-        <CardContent>
-          {pledge.desc && (
-            <Typography variant="body2" color="textSecondary" component="span">
-              {pledge.desc}
-            </Typography>
-          )}
-        </CardContent>
-        <CardActions>
-          <Button
-            className={classes.firstButton}
-            size="small"
-            color="primary"
-            onClick={() => alert("Not ready yet...")}
-          >
-            Learn More
-          </Button>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails className={classes.detailsContainer}>
+          <Typography>{pledge.desc}</Typography>
           <Reward
             ref={ref => {
               this.reward = ref;
@@ -101,7 +72,8 @@ class PledgeItem extends React.Component {
             }}
           >
             <Button
-              size="small"
+              className={classes.commitButton}
+              variant="outlined"
               color={commitment ? "secondary" : "primary"}
               onClick={
                 commitment
@@ -117,8 +89,8 @@ class PledgeItem extends React.Component {
               {commitment ? "Revoke Commitment" : "Make Commitment"}
             </Button>
           </Reward>
-        </CardActions>
-      </Card>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
     );
   }
 }

@@ -13,6 +13,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 
 import { pixels } from "../../constants";
 import {
@@ -22,9 +23,11 @@ import {
 import { showLogin } from "../../store/actions/LoginActions";
 import { setTitle } from "../../store/actions/NavActions";
 import { titles } from "../../navigation/navItems";
+import { commonStyles } from "../../styles";
 
 const styles = theme => {
   return {
+    ...commonStyles,
     root: {
       display: "flex",
       flexGrow: 1,
@@ -33,6 +36,12 @@ const styles = theme => {
     paper: {
       padding: "8px",
       textAlign: "left"
+    },
+    costTitle: {
+      fontSize: theme.typography.pxToRem(24),
+      fontWeight: theme.typography.fontWeightMedium,
+      marginTop: "16px",
+      marginBottom: "16px"
     }
   };
 };
@@ -71,27 +80,28 @@ class ListPledges extends Component {
     } else onDeleteCommitment(commitment);
   };
 
-  renderPledgeItems() {
+  renderPledgeItems(cost) {
     const {
       [storedAs.allPledges]: pledges,
       [storedAs.myCommitments]: myCommitments,
       uid
     } = this.props;
-    const sortedPledges = [...pledges].sort((a, b) =>
-      a.ordinal < b.ordinal ? -1 : a.ordinal > b.ordinal ? 1 : 0
-    );
+    const sortedPledges = [...pledges]
+      .filter(p => p.cost === cost)
+      .sort((a, b) =>
+        a.ordinal < b.ordinal ? -1 : a.ordinal > b.ordinal ? 1 : 0
+      );
     return sortedPledges.map(pledge => {
       return (
-        <Grid item xs={12} sm={6} lg={4} key={pledge.id}>
-          <PledgeItem
-            pledge={pledge}
-            commitment={myCommitments.find(
-              c => c.userId === uid && c.pledgeId === pledge.id
-            )}
-            onAddCommitment={this.handleAddCommitment}
-            onDeleteCommitment={this.handleShowDeleteCommitment}
-          />
-        </Grid>
+        <PledgeItem
+          key={pledge.id}
+          pledge={pledge}
+          commitment={myCommitments.find(
+            c => c.userId === uid && c.pledgeId === pledge.id
+          )}
+          onAddCommitment={this.handleAddCommitment}
+          onDeleteCommitment={this.handleShowDeleteCommitment}
+        />
       );
     });
   }
@@ -99,10 +109,21 @@ class ListPledges extends Component {
   render() {
     const { classes } = this.props;
     const { deleteDialogOpen, commitment } = this.state;
+    const costs = ["Low", "Medium", "High"];
     return (
       <div className={classes.root}>
         <Grid container spacing={2}>
-          {this.renderPledgeItems()}
+          {costs.map(cost => {
+            return (
+              <div key={cost}>
+                <Typography className={classes.costTitle}>
+                  {cost} Cost
+                </Typography>
+                {this.renderPledgeItems(cost)}
+              </div>
+            );
+          })}
+
           <Dialog
             open={deleteDialogOpen}
             onClose={this.handleHideDeleteCommitment}
