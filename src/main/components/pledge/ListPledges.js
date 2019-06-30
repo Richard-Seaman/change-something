@@ -82,9 +82,10 @@ class ListPledges extends Component {
 
   renderPledgeItems(cost) {
     const {
-      [storedAs.allPledges]: pledges,
-      [storedAs.myCommitments]: myCommitments,
-      uid
+      [storedAs.ALL_PLEDGES]: pledges,
+      [storedAs.MY_COMMITMENTS]: myCommitments,
+      uid,
+      history
     } = this.props;
     const sortedPledges = [...pledges]
       .filter(p => p.cost === cost)
@@ -101,13 +102,14 @@ class ListPledges extends Component {
           )}
           onAddCommitment={this.handleAddCommitment}
           onDeleteCommitment={this.handleShowDeleteCommitment}
+          history={history}
         />
       );
     });
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, claims } = this.props;
     const { deleteDialogOpen, commitment } = this.state;
     const costs = ["Low", "Medium", "High"];
     return (
@@ -159,24 +161,30 @@ class ListPledges extends Component {
   }
 }
 
+ListPledges.defaultProps = {
+  claims: {}
+};
+
 ListPledges.propTypes = {
   classes: PropTypes.object.isRequired,
   checked: PropTypes.object,
-  [storedAs.allPledges]: PropTypes.array,
-  [storedAs.myCommitments]: PropTypes.array,
+  [storedAs.ALL_PLEDGES]: PropTypes.array,
+  [storedAs.MY_COMMITMENTS]: PropTypes.array,
   onAddCommitment: PropTypes.func.isRequired,
   onDeleteCommitment: PropTypes.func.isRequired,
   onShowLogin: PropTypes.func.isRequired,
-  onSetTitle: PropTypes.func.isRequired
+  onSetTitle: PropTypes.func.isRequired,
+  claims: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
   return {
     checked: state.pledges.checked || {},
     uid: state.firebase.auth.uid,
-    [storedAs.allPledges]: state.firestore.ordered[storedAs.allPledges] || [],
-    [storedAs.myCommitments]:
-      state.firestore.ordered[storedAs.myCommitments] || []
+    [storedAs.ALL_PLEDGES]: state.firestore.ordered[storedAs.ALL_PLEDGES] || [],
+    [storedAs.MY_COMMITMENTS]:
+      state.firestore.ordered[storedAs.MY_COMMITMENTS] || [],
+    claims: state.login.claims
   };
 };
 
@@ -200,13 +208,13 @@ export default compose(
     const queries = [];
     queries.push({
       collection: collections.PLEDGES,
-      storeAs: storedAs.allPledges
+      storeAs: storedAs.ALL_PLEDGES
     });
     if (uid) {
       queries.push({
         collection: collections.COMMITMENTS,
         where: [["userId", "==", uid]],
-        storeAs: storedAs.myCommitments
+        storeAs: storedAs.MY_COMMITMENTS
       });
     }
     return queries;

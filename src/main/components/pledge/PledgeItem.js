@@ -2,6 +2,8 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
+import { connect } from "react-redux";
+import { compose } from "redux";
 
 import Button from "@material-ui/core/Button";
 import Reward from "react-rewards";
@@ -10,6 +12,8 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
+import { paths } from "../../routes/constants";
+
 const styles = theme => ({
   summaryTextContainer: {
     flexDirection: "column"
@@ -17,9 +21,6 @@ const styles = theme => ({
   detailsContainer: {
     flexDirection: "column",
     alignItems: "center"
-  },
-  commitButton: {
-    marginTop: "16px"
   },
   heading: {
     fontWeight: theme.typography.fontWeightRegular
@@ -31,17 +32,33 @@ const styles = theme => ({
   detailsText: {
     marginBottom: "8px",
     alignSelf: "flex-start"
+  },
+  buttonsContainer: {
+    marginTop: "16px",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  button: {
+    marginLeft: "8px",
+    marginRight: "8px"
   }
 });
 
 class PledgeItem extends React.Component {
+  handleEditPledge = pledge => {
+    const { history } = this.props;
+    history.push(`${paths.pledges}/${pledge.id}`);
+  };
+
   render() {
     const {
       classes,
       pledge,
       onAddCommitment,
       onDeleteCommitment,
-      commitment
+      commitment,
+      claims
     } = this.props;
     return (
       <ExpansionPanel>
@@ -67,36 +84,47 @@ class PledgeItem extends React.Component {
               </Typography>
             );
           })}
-          <Reward
-            ref={ref => {
-              this.reward = ref;
-            }}
-            type={commitment ? "emoji" : "confetti"}
-            config={{
-              emoji: commitment
-                ? ["😡", "🔥", "❓", "❗"]
-                : ["♻️", "🌈", "☀️", "🌱"],
-              elementSize: commitment ? 30 : 15
-            }}
-          >
-            <Button
-              className={classes.commitButton}
-              variant="outlined"
-              color={commitment ? "secondary" : "primary"}
-              onClick={
-                commitment
-                  ? () => {
-                      onDeleteCommitment(commitment);
-                    }
-                  : () => {
-                      this.reward.rewardMe();
-                      onAddCommitment(pledge.id);
-                    }
-              }
+          <div className={classes.buttonsContainer}>
+            <Reward
+              ref={ref => {
+                this.reward = ref;
+              }}
+              type={commitment ? "emoji" : "confetti"}
+              config={{
+                emoji: commitment
+                  ? ["😡", "🔥", "❓", "❗"]
+                  : ["♻️", "🌈", "☀️", "🌱"],
+                elementSize: commitment ? 30 : 15
+              }}
             >
-              {commitment ? "Revoke Commitment" : "Make Commitment"}
-            </Button>
-          </Reward>
+              <Button
+                className={classes.button}
+                variant="outlined"
+                color={commitment ? "secondary" : "primary"}
+                onClick={
+                  commitment
+                    ? () => {
+                        onDeleteCommitment(commitment);
+                      }
+                    : () => {
+                        this.reward.rewardMe();
+                        onAddCommitment(pledge.id);
+                      }
+                }
+              >
+                {commitment ? "Revoke Commitment" : "Make Commitment"}
+              </Button>
+            </Reward>
+            {claims.moderator && (
+              <Button
+                className={classes.button}
+                variant="outlined"
+                onClick={() => this.handleEditPledge(pledge)}
+              >
+                Edit
+              </Button>
+            )}
+          </div>
         </ExpansionPanelDetails>
       </ExpansionPanel>
     );
@@ -110,4 +138,20 @@ PledgeItem.propTypes = {
   onDeleteCommitment: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(PledgeItem);
+const mapStateToProps = state => {
+  return {
+    claims: state.login.claims
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  withStyles(styles)
+)(PledgeItem);

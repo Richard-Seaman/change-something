@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { withStyles } from "@material-ui/styles";
 import { connect } from "react-redux";
 import { compose } from "redux";
@@ -36,9 +36,14 @@ class NavDrawer extends React.Component {
   };
 
   getList = () => {
-    const { classes, currentTitle } = this.props;
-    const topListItems = items.filter(item => item.section === 0);
-    const bottomListItems = items.filter(item => item.section === 1);
+    const { classes, currentTitle, claims } = this.props;
+    const topListItems = items.filter(
+      item => item.section === 0 && !item.admin
+    );
+    const bottomListItems = items.filter(
+      item => item.section === 1 && !item.admin
+    );
+    const adminListItems = items.filter(item => !!item.admin);
     return (
       <div
         className={classes.list}
@@ -71,6 +76,23 @@ class NavDrawer extends React.Component {
             </ListItem>
           ))}
         </List>
+        {claims.moderator && adminListItems.length > 0 && (
+          <Fragment>
+            <Divider />
+            <List component="nav">
+              {adminListItems.map(item => (
+                <ListItem
+                  button
+                  key={item.title}
+                  selected={item.title === currentTitle}
+                  onClick={() => this.handleSelected(item)}
+                >
+                  <ListItemText primary={item.title} />
+                </ListItem>
+              ))}
+            </List>
+          </Fragment>
+        )}
       </div>
     );
   };
@@ -85,16 +107,22 @@ class NavDrawer extends React.Component {
   }
 }
 
+NavDrawer.defaultProps = {
+  claims: {}
+};
+
 NavDrawer.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onHideNavDrawer: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  claims: PropTypes.object
 };
 
 const mapStateToProps = state => {
   return {
     isOpen: state.nav.isOpen,
-    currentTitle: state.nav.title
+    currentTitle: state.nav.title,
+    claims: state.login.claims
   };
 };
 

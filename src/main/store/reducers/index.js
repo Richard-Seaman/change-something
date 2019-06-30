@@ -5,6 +5,7 @@ import { firestoreReducer } from "redux-firestore";
 import { pledgesReducer } from "./PledgesReducer";
 import { loginReducer } from "./LoginReducer";
 import { navReducer } from "./NavReducer";
+import { formReducer } from "./FormReducer";
 
 export const initialState = {};
 
@@ -13,5 +14,6 @@ export const rootReducer = combineReducers({
   firestore: firestoreReducer,
   pledges: pledgesReducer,
   login: loginReducer,
-  nav: navReducer
+  nav: navReducer,
+  forms: formReducer
 });

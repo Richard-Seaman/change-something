@@ -37,6 +37,7 @@ const enhancers = [
   reactReduxFirebase(firebase, {
     userProfile: "users",
     useFirestoreForProfile: true,
+    // https://github.com/prescottprue/react-redux-firebase/issues/531
     onAuthStateChanged: async (authData, firebase, dispatch) => {
       if (!authData) {
         dispatch(updateClaims({}));
