@@ -43,7 +43,6 @@ class PledgeItem extends React.Component {
       onDeleteCommitment,
       commitment
     } = this.props;
-    console.log(pledge);
     return (
       <ExpansionPanel>
         <ExpansionPanelSummary

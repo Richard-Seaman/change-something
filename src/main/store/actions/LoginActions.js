@@ -11,3 +11,10 @@ export const hideLogin = () => {
     type: actionTypes.HIDE_LOGIN
   };
 };
+
+export const updateClaims = claims => {
+  return {
+    type: actionTypes.CLAIMS_UPDATE,
+    payload: claims
+  };
+};

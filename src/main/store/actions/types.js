@@ -1,5 +1,6 @@
 export const SHOW_LOGIN = "SHOW_LOGIN";
 export const HIDE_LOGIN = "HIDE_LOGIN";
+export const CLAIMS_UPDATE = "CLAIMS_UPDATE";
 
 export const SHOW_NAV_DRAWER = "SHOW_NAV_DRAWER";
 export const HIDE_NAV_DRAWER = "HIDE_NAV_DRAWER";
