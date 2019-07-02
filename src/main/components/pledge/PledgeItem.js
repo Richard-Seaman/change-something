@@ -11,8 +11,16 @@ import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MUIRichTextEditor from "mui-rte";
+import TextField from "@material-ui/core/TextField";
 
 import { paths } from "../../routes/constants";
+import {
+  addPledge,
+  updatePledge,
+  deletePledge
+} from "../../store/actions/PledgeActions";
+import { setFormData } from "../../store/actions/FormActions";
 
 const styles = theme => ({
   summaryTextContainer: {
@@ -46,9 +54,29 @@ const styles = theme => ({
 });
 
 class PledgeItem extends React.Component {
+  state = {
+    editMode: false,
+    haveSetFormState: false
+  };
+
+  handleToggleEdit = () => {
+    const { editMode, haveSetFormState } = this.state;
+    const { onSetFormData, pledge } = this.props;
+    const stateUpdates = { editMode: !editMode };
+    if (pledge && !haveSetFormState) {
+      onSetFormData(pledge.id, "descRt", pledge.descRt || {});
+      stateUpdates["haveSetFormState"] = true;
+    }
+    this.setState(stateUpdates);
+  };
+
   handleEditPledge = pledge => {
     const { history } = this.props;
     history.push(`${paths.pledges}/${pledge.id}`);
+  };
+
+  handleSaveText = data => {
+    console.log(data);
   };
 
   render() {
@@ -60,6 +88,7 @@ class PledgeItem extends React.Component {
       commitment,
       claims
     } = this.props;
+    const { editMode } = this.state;
     return (
       <ExpansionPanel>
         <ExpansionPanelSummary
@@ -68,7 +97,19 @@ class PledgeItem extends React.Component {
           id="panel1a-header"
         >
           <div className={classes.summaryTextContainer}>
-            <Typography className={classes.heading}>{pledge.title}</Typography>
+            {editMode ? (
+              <TextField
+                fullWidth={true}
+                //error={!config.valid && config.touched}
+                id={"title"}
+                value={pledge.title || ""}
+                margin="normal"
+              />
+            ) : (
+              <Typography className={classes.heading}>
+                {pledge.title}
+              </Typography>
+            )}
             <Typography
               className={classes.commitmentsText}
             >{`${pledge.counter || 0} ${
@@ -77,13 +118,35 @@ class PledgeItem extends React.Component {
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.detailsContainer}>
-          {pledge.desc.map((para, idx) => {
-            return (
-              <Typography className={classes.detailsText} key={`desc[${idx}]`}>
-                {para}
-              </Typography>
-            );
-          })}
+          {pledge.descRt && (
+            <MUIRichTextEditor
+              label="Start typing..."
+              onSave={this.handleSaveText}
+              value={JSON.stringify(pledge.descRt)}
+              readOnly={!editMode}
+              controls={[
+                "bold",
+                "italic",
+                "underline",
+                "link",
+                "numberList",
+                "bulletList",
+                "quote",
+                "code"
+              ]}
+            />
+          )}
+          {!pledge.descRt &&
+            pledge.desc.map((para, idx) => {
+              return (
+                <Typography
+                  className={classes.detailsText}
+                  key={`desc[${idx}]`}
+                >
+                  {para}
+                </Typography>
+              );
+            })}
           <div className={classes.buttonsContainer}>
             <Reward
               ref={ref => {
@@ -119,9 +182,18 @@ class PledgeItem extends React.Component {
               <Button
                 className={classes.button}
                 variant="outlined"
-                onClick={() => this.handleEditPledge(pledge)}
+                onClick={() => this.handleToggleEdit()}
               >
-                Edit
+                {editMode ? "Cancel" : "Edit Mode"}
+              </Button>
+            )}
+            {editMode && (
+              <Button
+                className={classes.button}
+                variant="outlined"
+                onClick={() => this.handleToggleEdit()} // TODO
+              >
+                Save
               </Button>
             )}
           </div>
@@ -138,14 +210,22 @@ PledgeItem.propTypes = {
   onDeleteCommitment: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+  const { pledge } = ownProps;
   return {
-    claims: state.login.claims
+    claims: state.login.claims,
+    formData: pledge ? state.forms[pledge.id] : {}
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    onAddPledge: pledge => dispatch(addPledge(pledge)),
+    onUpdatePledge: pledge => dispatch(updatePledge(pledge)),
+    onDeletePledge: pledge => dispatch(deletePledge(pledge)),
+    onSetFormData: (objectKey, fieldKey, value) =>
+      dispatch(setFormData(objectKey, fieldKey, value))
+  };
 };
 
 export default compose(

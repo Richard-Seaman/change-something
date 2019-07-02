@@ -7,6 +7,7 @@ import { compose } from "redux";
 import Grid from "@material-ui/core/Grid";
 import { Button } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
+import MUIRichTextEditor from "mui-rte";
 
 import {
   addPledge,
@@ -19,7 +20,10 @@ import { storedAs, queries } from "../../store/firebaseConfig";
 import { isNew, paths } from "../../routes/constants";
 
 const styles = theme => ({
-  ...commonStyles
+  ...commonStyles,
+  editor: {
+    background: "white"
+  }
 });
 
 class EditPledge extends Component {
@@ -66,10 +70,13 @@ class EditPledge extends Component {
     this.handleDelete();
   };
 
+  handleSaveText = data => {
+    console.log(data);
+  };
+
   render() {
     const { classes, [storedAs.PLEDGE]: pledge, match, formData } = this.props;
     const { pledgeId } = match.params;
-
     return (
       <div className={`${classes.viewPage} ${classes.topBorder}`}>
         <Grid container spacing={24} direction="row" justify="center">
