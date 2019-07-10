@@ -3,6 +3,8 @@ import { reactReduxFirebase, getFirebase } from "react-redux-firebase";
 import { reduxFirestore, getFirestore } from "redux-firestore";
 import thunk from "redux-thunk";
 
+import validation from "./middlewares/validation";
+
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
@@ -31,8 +33,13 @@ firebase
     }
   });
 
+const middleware = [
+  thunk.withExtraArgument({ getFirebase, getFirestore }),
+  validation
+];
+
 const enhancers = [
-  applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })),
+  applyMiddleware(...middleware),
   reduxFirestore(firebase),
   reactReduxFirebase(firebase, {
     userProfile: "users",

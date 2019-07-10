@@ -56,3 +56,9 @@ export const typoProps = {
     align: "left"
   }
 };
+
+export const VALIDATORS_BY_NAME = {
+  REQUIRED: "required",
+  STRING: "string",
+  NUMBER: "number"
+};
