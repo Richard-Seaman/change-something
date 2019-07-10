@@ -4,7 +4,7 @@ import { TextField } from "@material-ui/core";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-import RemoteOptionsSelect from "../common/RemoteOptionsSelect";
+import RemoteOptionsSelect from "./RemoteOptionsSelect";
 import {
   createField,
   clearError,

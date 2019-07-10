@@ -21,6 +21,9 @@ import {
   deletePledge
 } from "../../store/actions/PledgeActions";
 import { setFormData } from "../../store/actions/FormActions";
+import ValidatedField from "../widgets/ValidatedField";
+
+import { VALIDATORS_BY_NAME } from "../../constants";
 
 const styles = theme => ({
   summaryTextContainer: {
@@ -54,10 +57,14 @@ const styles = theme => ({
 });
 
 class PledgeItem extends React.Component {
-  state = {
-    editMode: false,
-    haveSetFormState: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      ...this.props.pledge,
+      editMode: false,
+      haveSetFormState: false
+    };
+  }
 
   handleToggleEdit = () => {
     const { editMode, haveSetFormState } = this.state;
@@ -79,6 +86,14 @@ class PledgeItem extends React.Component {
     console.log(data);
   };
 
+  handleChange = event => {
+    const { name, value } = event.target;
+
+    this.setState({
+      [name]: value
+    });
+  };
+
   render() {
     const {
       classes,
@@ -88,7 +103,13 @@ class PledgeItem extends React.Component {
       commitment,
       claims
     } = this.props;
-    const { editMode } = this.state;
+    const { editMode, title } = this.state;
+    const commonProps = {
+      inputProps: { className: classes.textFieldContainer },
+      onChange: this.handleChange,
+      className: classes.textField,
+      validators: [VALIDATORS_BY_NAME.REQUIRED]
+    };
     return (
       <ExpansionPanel>
         <ExpansionPanelSummary
@@ -98,12 +119,12 @@ class PledgeItem extends React.Component {
         >
           <div className={classes.summaryTextContainer}>
             {editMode ? (
-              <TextField
-                fullWidth={true}
-                //error={!config.valid && config.touched}
-                id={"title"}
-                value={pledge.title || ""}
-                margin="normal"
+              <ValidatedField
+                id="title"
+                name="title"
+                label="Title"
+                value={title}
+                {...commonProps}
               />
             ) : (
               <Typography className={classes.heading}>
