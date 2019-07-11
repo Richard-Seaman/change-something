@@ -108,7 +108,7 @@ class ValidatedField extends React.Component {
 
 ValidatedField.defaultProps = {
   type: "text",
-  variant: "filled",
+  variant: "standard",
   margin: "normal",
   className: "",
   helperText: "",
@@ -119,7 +119,8 @@ ValidatedField.defaultProps = {
   error: null,
   inputProps: null,
   onChange: () => {},
-  disabled: false
+  disabled: false,
+  fullWidth: true
 };
 
 ValidatedField.propTypes = {
@@ -141,7 +142,8 @@ ValidatedField.propTypes = {
   helperText: PropTypes.string,
   error: PropTypes.string,
   inputProps: PropTypes.object,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  fullWidth: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) =>

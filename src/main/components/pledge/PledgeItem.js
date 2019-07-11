@@ -12,18 +12,8 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MUIRichTextEditor from "mui-rte";
-import TextField from "@material-ui/core/TextField";
 
 import { paths } from "../../routes/constants";
-import {
-  addPledge,
-  updatePledge,
-  deletePledge
-} from "../../store/actions/PledgeActions";
-import { setFormData } from "../../store/actions/FormActions";
-import ValidatedField from "../widgets/ValidatedField";
-
-import { VALIDATORS_BY_NAME } from "../../constants";
 
 const styles = theme => ({
   summaryTextContainer: {
@@ -57,41 +47,9 @@ const styles = theme => ({
 });
 
 class PledgeItem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      ...this.props.pledge,
-      editMode: false,
-      haveSetFormState: false
-    };
-  }
-
-  handleToggleEdit = () => {
-    const { editMode, haveSetFormState } = this.state;
-    const { onSetFormData, pledge } = this.props;
-    const stateUpdates = { editMode: !editMode };
-    if (pledge && !haveSetFormState) {
-      onSetFormData(pledge.id, "descRt", pledge.descRt || {});
-      stateUpdates["haveSetFormState"] = true;
-    }
-    this.setState(stateUpdates);
-  };
-
   handleEditPledge = pledge => {
     const { history } = this.props;
     history.push(`${paths.pledges}/${pledge.id}`);
-  };
-
-  handleSaveText = data => {
-    console.log(data);
-  };
-
-  handleChange = event => {
-    const { name, value } = event.target;
-
-    this.setState({
-      [name]: value
-    });
   };
 
   render() {
@@ -103,13 +61,6 @@ class PledgeItem extends React.Component {
       commitment,
       claims
     } = this.props;
-    const { editMode, title } = this.state;
-    const commonProps = {
-      inputProps: { className: classes.textFieldContainer },
-      onChange: this.handleChange,
-      className: classes.textField,
-      validators: [VALIDATORS_BY_NAME.REQUIRED]
-    };
     return (
       <ExpansionPanel>
         <ExpansionPanelSummary
@@ -118,19 +69,8 @@ class PledgeItem extends React.Component {
           id="panel1a-header"
         >
           <div className={classes.summaryTextContainer}>
-            {editMode ? (
-              <ValidatedField
-                id="title"
-                name="title"
-                label="Title"
-                value={title}
-                {...commonProps}
-              />
-            ) : (
-              <Typography className={classes.heading}>
-                {pledge.title}
-              </Typography>
-            )}
+            <Typography className={classes.heading}>{pledge.title}</Typography>
+
             <Typography
               className={classes.commitmentsText}
             >{`${pledge.counter || 0} ${
@@ -144,17 +84,8 @@ class PledgeItem extends React.Component {
               label="Start typing..."
               onSave={this.handleSaveText}
               value={JSON.stringify(pledge.descRt)}
-              readOnly={!editMode}
-              controls={[
-                "bold",
-                "italic",
-                "underline",
-                "link",
-                "numberList",
-                "bulletList",
-                "quote",
-                "code"
-              ]}
+              readOnly={true}
+              controls={[]}
             />
           )}
           {!pledge.descRt &&
@@ -203,18 +134,9 @@ class PledgeItem extends React.Component {
               <Button
                 className={classes.button}
                 variant="outlined"
-                onClick={() => this.handleToggleEdit()}
+                onClick={() => this.handleEditPledge(pledge)}
               >
-                {editMode ? "Cancel" : "Edit Mode"}
-              </Button>
-            )}
-            {editMode && (
-              <Button
-                className={classes.button}
-                variant="outlined"
-                onClick={() => this.handleToggleEdit()} // TODO
-              >
-                Save
+                {"Edit"}
               </Button>
             )}
           </div>
@@ -232,21 +154,13 @@ PledgeItem.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { pledge } = ownProps;
   return {
-    claims: state.login.claims,
-    formData: pledge ? state.forms[pledge.id] : {}
+    claims: state.login.claims
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return {
-    onAddPledge: pledge => dispatch(addPledge(pledge)),
-    onUpdatePledge: pledge => dispatch(updatePledge(pledge)),
-    onDeletePledge: pledge => dispatch(deletePledge(pledge)),
-    onSetFormData: (objectKey, fieldKey, value) =>
-      dispatch(setFormData(objectKey, fieldKey, value))
-  };
+  return {};
 };
 
 export default compose(

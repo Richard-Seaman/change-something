@@ -35,7 +35,7 @@ class Test extends Component {
 
   render() {
     const { classes } = this.props;
-    const { lastName, firstName } = this.state;
+    const { lastName } = this.state;
     const commonProps = {
       inputProps: { className: classes.textFieldContainer },
       onChange: this.handleChange,

@@ -109,7 +109,7 @@ class ListPledges extends Component {
   }
 
   render() {
-    const { classes, claims } = this.props;
+    const { classes } = this.props;
     const { deleteDialogOpen, commitment } = this.state;
     const costs = ["Low", "Medium", "High"];
     return (
@@ -161,10 +161,6 @@ class ListPledges extends Component {
   }
 }
 
-ListPledges.defaultProps = {
-  claims: {}
-};
-
 ListPledges.propTypes = {
   classes: PropTypes.object.isRequired,
   checked: PropTypes.object,
@@ -173,8 +169,7 @@ ListPledges.propTypes = {
   onAddCommitment: PropTypes.func.isRequired,
   onDeleteCommitment: PropTypes.func.isRequired,
   onShowLogin: PropTypes.func.isRequired,
-  onSetTitle: PropTypes.func.isRequired,
-  claims: PropTypes.object.isRequired
+  onSetTitle: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {

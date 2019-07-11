@@ -14,33 +14,62 @@ import {
   updatePledge,
   deletePledge
 } from "../../store/actions/PledgeActions";
-import { setFormData } from "../../store/actions/FormActions";
 import { commonStyles } from "../../styles";
 import { storedAs, queries } from "../../store/firebaseConfig";
 import { isNew, paths } from "../../routes/constants";
 
+import ValidatedField from "../widgets/ValidatedField";
+import { VALIDATORS_BY_NAME } from "../../constants";
+
 const styles = theme => ({
   ...commonStyles,
-  editor: {
-    background: "white"
+  rte: {
+    borderBottom: "solid 1px #9e9e9e",
+    "&:hover": {
+      borderBottom: "solid 2px #000000"
+    }
   }
 });
 
+const initialPledge = {
+  title: "",
+  descRt: "",
+  cost: "High",
+  ordinal: 99
+};
+
 class EditPledge extends Component {
+  constructor(props) {
+    super(props);
+    this.rteRef = React.createRef();
+  }
+
   state = {};
 
   componentWillReceiveProps(nextProps) {
     // TODO: set fields if existing pledge
+    if (this.state.haveSetPledgeFB) return;
+    const { pledgeFB } = nextProps;
+    if (pledgeFB) {
+      if (!pledgeFB.descRt) {
+        pledgeFB.descRt = "";
+      }
+      this.setState({
+        ...pledgeFB,
+        haveSetPledgeFB: true
+      });
+    } else if (!this.state.haveSetPledgeInitial) {
+      this.setState({
+        ...initialPledge,
+        haveSetPledgeInitial: true
+      });
+    }
   }
 
   handleSave = () => {
     // TODO
-    const {
-      [storedAs.PLEDGE]: pledge,
-      onAddPledge,
-      onUpdatePledge,
-      match
-    } = this.props;
+    const { onAddPledge, onUpdatePledge, match } = this.props;
+    const { title, descRt, ordinal, cost } = this.state;
     const { pledgeId } = match.params;
     if (!isNew(pledgeId)) {
       //onUpdateProvider();
@@ -60,39 +89,94 @@ class EditPledge extends Component {
     history.goBack();
   };
 
-  handleTextFieldChange = (event, fieldKey) => {
-    const { onSetFormData } = this.props;
-    onSetFormData("pledge", fieldKey, event.target.value);
-    // TODO
-  };
-
   handleConfirmDelete = () => {
     this.handleDelete();
   };
 
-  handleSaveText = data => {
+  handleChange = event => {
+    const { name, value } = event.target;
+    // console.log("name: ", name, " value: ", value);
+    this.setState({
+      [name]: value
+    });
+    this.setDescRtState();
+  };
+
+  setDescRtState = () => {
+    this.rteRef.current.save();
+  };
+
+  handleRteData = data => {
     console.log(data);
+    this.setState({
+      descRt: JSON.parse(data)
+    });
   };
 
   render() {
-    const { classes, [storedAs.PLEDGE]: pledge, match, formData } = this.props;
-    const { pledgeId } = match.params;
+    const { classes } = this.props;
+    const { title, descRt, ordinal, cost } = this.state;
+    const commonProps = {
+      inputProps: { className: classes.textFieldContainer },
+      onChange: this.handleChange,
+      className: classes.textField,
+      fullWidth: true
+    };
     return (
       <div className={`${classes.viewPage} ${classes.topBorder}`}>
-        <Grid container spacing={24} direction="row" justify="center">
-          <Grid item xs={12}>
-            <TextField
-              fullWidth={true}
-              //error={!config.valid && config.touched}
-              id={"title"}
-              label={"Title"}
-              //helperText={config.error || config.helperText || null}
-              className={classes.textField}
-              value={formData.title || ""}
-              onChange={event => this.handleTextFieldChange(event, "title")}
-              margin="normal"
+        <Grid container spacing={2} direction="row" justify="center">
+          <Grid item xs={6}>
+            <ValidatedField
+              id="title"
+              name="title"
+              label="Title"
+              value={title}
+              validators={[VALIDATORS_BY_NAME.REQUIRED]}
+              {...commonProps}
             />
           </Grid>
+          <Grid item xs={3}>
+            <ValidatedField
+              id="ordinal"
+              name="ordinal"
+              label="Ordinal"
+              value={ordinal}
+              validators={[VALIDATORS_BY_NAME.NUMBER]}
+              {...commonProps}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <ValidatedField
+              id="cost"
+              name="cost"
+              label="Cost"
+              value={cost}
+              validators={[VALIDATORS_BY_NAME.REQUIRED]}
+              {...commonProps}
+            />
+          </Grid>
+          {descRt && (
+            <Grid item xs={12}>
+              <div className={classes.rte}>
+                <MUIRichTextEditor
+                  ref={this.rteRef}
+                  onSave={this.handleRteData}
+                  label="Description..."
+                  value={JSON.stringify(descRt)}
+                  controls={[
+                    "bold",
+                    "italic",
+                    "underline",
+                    "link",
+                    "numberList",
+                    "bulletList",
+                    "quote",
+                    "code"
+                  ]}
+                />
+              </div>
+            </Grid>
+          )}
         </Grid>
       </div>
     );
@@ -105,8 +189,7 @@ EditPledge.defaultProps = {
 
 EditPledge.propTypes = {
   claims: PropTypes.object.isRequired,
-  pledge: PropTypes.object,
-  formData: PropTypes.object.isRequired,
+  pledgeFB: PropTypes.object,
   onAddPledge: PropTypes.func.isRequired,
   onUpdatePledge: PropTypes.func.isRequired,
   onDeletePledge: PropTypes.func.isRequired
@@ -115,8 +198,7 @@ EditPledge.propTypes = {
 const mapStateToProps = state => {
   return {
     claims: state.login.claims,
-    pledge: state.firestore.data.pledge,
-    formData: state.forms.pledge
+    pledgeFB: state.firestore.data.pledge
   };
 };
 
@@ -124,9 +206,7 @@ const mapDispatchToProps = dispatch => {
   return {
     onAddPledge: pledge => dispatch(addPledge(pledge)),
     onUpdatePledge: pledge => dispatch(updatePledge(pledge)),
-    onDeletePledge: pledge => dispatch(deletePledge(pledge)),
-    onSetFormData: (objectKey, fieldKey, value) =>
-      dispatch(setFormData(objectKey, fieldKey, value))
+    onDeletePledge: pledge => dispatch(deletePledge(pledge))
   };
 };
 
