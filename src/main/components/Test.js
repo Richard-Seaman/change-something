@@ -6,50 +6,35 @@ import PropTypes from "prop-types";
 
 import { setTitle } from "../store/actions/NavActions";
 
-import ValidatedField from "./widgets/ValidatedField";
-import { VALIDATORS_BY_NAME } from "../constants";
+import MUIRichTextEditor from "mui-rte";
 
 const styles = theme => {
   return {};
 };
 
 class Test extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      lastName: "Seaman"
-    };
-  }
   componentDidMount() {
     const { onSetTitle } = this.props;
     onSetTitle("Test");
   }
-
-  handleChange = event => {
-    const { name, value } = event.target;
-
-    this.setState({
-      [name]: value
-    });
-  };
-
   render() {
-    const { classes } = this.props;
-    const { lastName } = this.state;
-    const commonProps = {
-      inputProps: { className: classes.textFieldContainer },
-      onChange: this.handleChange,
-      className: classes.textField,
-      validators: [VALIDATORS_BY_NAME.REQUIRED]
-    };
     return (
       <div>
-        <ValidatedField
-          id="lastName"
-          name="lastName"
-          label="Last Name"
-          value={lastName}
-          {...commonProps}
+        <MUIRichTextEditor
+          onSave={data => console.log(JSON.stringify(data))}
+          label="Description..."
+          value={""}
+          controls={[
+            "bold",
+            "italic",
+            "underline",
+            "link",
+            "numberList",
+            "bulletList",
+            "quote",
+            "code",
+            "save"
+          ]}
         />
       </div>
     );

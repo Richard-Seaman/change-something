@@ -113,7 +113,6 @@ export const addPledge = pledge => {
   return (dispatch, getState, { getFirestore }) => {
     // Make sure fields are valid
     if (!dispatch({ type: MIDDLEWARE_VALIDATE })) return;
-
     const firestore = getFirestore();
     // First check if title already taken
     firestore
@@ -126,7 +125,7 @@ export const addPledge = pledge => {
         if (snapshot.size === 0) {
           firestore
             .collection(collections.PLEDGES)
-            .add({ ...pledge, id: null })
+            .add({ ...pledge })
             .then(res => {
               history.push(`/${paths.pledges}/${res.id}`);
               dispatch({
@@ -156,13 +155,11 @@ export const updatePledge = pledge => {
   return (dispatch, getState, { getFirestore }) => {
     // Make sure fields are valid
     if (!dispatch({ type: MIDDLEWARE_VALIDATE })) return;
-    const pledgeWithoutId = { ...pledge };
-    delete pledgeWithoutId["id"];
     const firestore = getFirestore();
     firestore
       .collection(collections.PLEDGES)
       .doc(pledge.id)
-      .update(pledgeWithoutId)
+      .update(pledge)
       .then(res => {
         dispatch({
           type: actionTypes.UPDATE_PLEDGE_SUCCESS,

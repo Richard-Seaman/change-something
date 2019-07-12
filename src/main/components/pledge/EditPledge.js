@@ -42,34 +42,45 @@ const styles = theme => ({
 
 const initialPledge = {
   title: "",
-  descRt: "",
-  cost: "High",
-  ordinal: 99
+  cost: "Low",
+  ordinal: 1
 };
+
+const emptyDescRt = {
+  blocks: [
+    {
+      key: "dgc6i",
+      text: "",
+      type: "unstyled",
+      depth: 0,
+      inlineStyleRanges: [],
+      entityRanges: [],
+      data: {}
+    }
+  ],
+  entityMap: {}
+};
+
+const costOptions = [{ name: "Low" }, { name: "Medium" }, { name: "High" }];
 
 class EditPledge extends Component {
   constructor(props) {
     super(props);
     this.rteRef = React.createRef();
+    const { match } = this.props;
+    const { pledgeId } = match.params;
+    const initialState = { ...initialPledge };
+    if (isNew(pledgeId)) initialState.descRt = emptyDescRt;
+    this.state = initialState;
   }
-
-  state = {};
 
   componentWillReceiveProps(nextProps) {
     if (this.state.haveSetPledgeFB) return;
     const { pledgeFB } = nextProps;
     if (pledgeFB) {
-      if (!pledgeFB.descRt) {
-        pledgeFB.descRt = "";
-      }
       this.setState({
         ...pledgeFB,
         haveSetPledgeFB: true
-      });
-    } else if (!this.state.haveSetPledgeInitial) {
-      this.setState({
-        ...initialPledge,
-        haveSetPledgeInitial: true
       });
     }
   }
@@ -128,14 +139,16 @@ class EditPledge extends Component {
     const { onAddPledge, onUpdatePledge, match } = this.props;
     const { title, descRt, ordinal, cost } = this.state;
     const { pledgeId } = match.params;
+
     // Construct the pledge
     const pledge = {
-      id: isNew(pledgeId) ? null : pledgeId,
       title,
-      descRt,
-      ordinal,
+      ordinal: Number(ordinal),
       cost
     };
+    if (!isNew(pledgeId)) pledge.id = pledgeId;
+    if (descRt) pledge.descRt = descRt;
+
     if (!isNew(pledgeId)) {
       // If it doesn't have a new id, update it
       onUpdatePledge(pledge);
@@ -154,7 +167,6 @@ class EditPledge extends Component {
       className: classes.textField,
       fullWidth: true
     };
-    const costOptions = [{ name: "Low" }, { name: "Medium" }, { name: "High" }];
     return (
       <div className={`${classes.viewPage} ${classes.topBorder}`}>
         <Grid container spacing={2} direction="row" justify="center">

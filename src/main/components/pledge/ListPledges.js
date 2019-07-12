@@ -16,6 +16,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
 import { pixels } from "../../constants";
+import { paths } from "../../routes/constants";
 import {
   addCommitment,
   deleteCommitment
@@ -31,7 +32,8 @@ const styles = theme => {
     root: {
       display: "flex",
       flexGrow: 1,
-      marginTop: pixels.gobalSpacing
+      marginTop: pixels.gobalSpacing,
+      flexDirection: "column"
     },
     paper: {
       padding: "8px",
@@ -80,6 +82,11 @@ class ListPledges extends Component {
     } else onDeleteCommitment(commitment);
   };
 
+  handleAddNewPledge = () => {
+    const { history } = this.props;
+    history.push(`/${paths.pledges}/${paths.new}`);
+  };
+
   renderPledgeItems(cost) {
     const {
       [storedAs.ALL_PLEDGES]: pledges,
@@ -109,11 +116,23 @@ class ListPledges extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, claims } = this.props;
     const { deleteDialogOpen, commitment } = this.state;
     const costs = ["Low", "Medium", "High"];
     return (
       <div className={classes.root}>
+        {claims.moderator && (
+          <div className={classes.buttonsContainer}>
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="primary"
+              onClick={this.handleAddNewPledge}
+            >
+              {"New"}
+            </Button>
+          </div>
+        )}
         <Grid container spacing={2}>
           {costs.map(cost => {
             return (
@@ -161,9 +180,13 @@ class ListPledges extends Component {
   }
 }
 
+ListPledges.defaultProps = {
+  claims: {}
+};
+
 ListPledges.propTypes = {
+  claims: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  checked: PropTypes.object,
   [storedAs.ALL_PLEDGES]: PropTypes.array,
   [storedAs.MY_COMMITMENTS]: PropTypes.array,
   onAddCommitment: PropTypes.func.isRequired,
@@ -174,7 +197,6 @@ ListPledges.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    checked: state.pledges.checked || {},
     uid: state.firebase.auth.uid,
     [storedAs.ALL_PLEDGES]: state.firestore.ordered[storedAs.ALL_PLEDGES] || [],
     [storedAs.MY_COMMITMENTS]:
