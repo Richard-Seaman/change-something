@@ -90,9 +90,9 @@ class EditPledge extends Component {
     this.handleDelete();
   };
   handleDelete = () => {
-    const { onDeleteProvider, match } = this.props;
+    const { onDeletePledge, match } = this.props;
     const { pledgeId } = match.params;
-    onDeleteProvider(pledgeId);
+    onDeletePledge(pledgeId);
   };
 
   handleCancel = () => {

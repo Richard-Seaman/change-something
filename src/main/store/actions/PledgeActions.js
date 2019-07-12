@@ -46,7 +46,7 @@ export const addCommitment = pledgeId => {
       userId,
       userDisplayName
     };
-    const myCommitments = state.firestore.ordered[storedAs.myCommitments];
+    const myCommitments = state.firestore.ordered[storedAs.MY_COMMITMENTS];
     // First check if commitment already made
     if (
       !myCommitments.some(
