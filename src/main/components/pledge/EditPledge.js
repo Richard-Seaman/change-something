@@ -56,7 +56,6 @@ class EditPledge extends Component {
   state = {};
 
   componentWillReceiveProps(nextProps) {
-    // TODO: set fields if existing pledge
     if (this.state.haveSetPledgeFB) return;
     const { pledgeFB } = nextProps;
     if (pledgeFB) {
@@ -75,6 +74,7 @@ class EditPledge extends Component {
     }
   }
 
+  // TODO
   handleConfirmDelete = () => {
     this.handleDelete();
   };

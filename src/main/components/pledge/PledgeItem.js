@@ -88,17 +88,6 @@ class PledgeItem extends React.Component {
               controls={[]}
             />
           )}
-          {!pledge.descRt &&
-            pledge.desc.map((para, idx) => {
-              return (
-                <Typography
-                  className={classes.detailsText}
-                  key={`desc[${idx}]`}
-                >
-                  {para}
-                </Typography>
-              );
-            })}
           <div className={classes.buttonsContainer}>
             <Reward
               ref={ref => {
