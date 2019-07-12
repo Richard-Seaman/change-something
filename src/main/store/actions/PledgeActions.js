@@ -2,6 +2,7 @@ import * as actionTypes from "./types";
 import { collections, storedAs } from "../firebaseConfig";
 import history from "../../utils/history";
 import { paths } from "../../routes/constants";
+import { MIDDLEWARE_VALIDATE } from "../actions/types";
 
 export const incrementCounter = (collection, docId, field, number) => {
   return (dispatch, getState, { getFirestore }) => {
@@ -110,6 +111,9 @@ export const deleteCommitment = commitment => {
 
 export const addPledge = pledge => {
   return (dispatch, getState, { getFirestore }) => {
+    // Make sure fields are valid
+    if (!dispatch({ type: MIDDLEWARE_VALIDATE })) return;
+
     const firestore = getFirestore();
     // First check if title already taken
     firestore
@@ -150,11 +154,15 @@ export const addPledge = pledge => {
 
 export const updatePledge = pledge => {
   return (dispatch, getState, { getFirestore }) => {
+    // Make sure fields are valid
+    if (!dispatch({ type: MIDDLEWARE_VALIDATE })) return;
+    const pledgeWithoutId = { ...pledge };
+    delete pledgeWithoutId["id"];
     const firestore = getFirestore();
     firestore
       .collection(collections.PLEDGES)
       .doc(pledge.id)
-      .update({ ...pledge, id: null })
+      .update(pledgeWithoutId)
       .then(res => {
         dispatch({
           type: actionTypes.UPDATE_PLEDGE_SUCCESS,

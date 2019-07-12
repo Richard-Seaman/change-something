@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/styles";
 import { connect } from "react-redux";
@@ -6,7 +6,6 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import Grid from "@material-ui/core/Grid";
 import { Button } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
 import MUIRichTextEditor from "mui-rte";
 
 import {
@@ -15,7 +14,7 @@ import {
   deletePledge
 } from "../../store/actions/PledgeActions";
 import { commonStyles } from "../../styles";
-import { storedAs, queries } from "../../store/firebaseConfig";
+import { queries } from "../../store/firebaseConfig";
 import { isNew, paths } from "../../routes/constants";
 
 import ValidatedField from "../widgets/ValidatedField";
@@ -76,18 +75,9 @@ class EditPledge extends Component {
     }
   }
 
-  handleSave = () => {
-    // TODO
-    const { onAddPledge, onUpdatePledge, match } = this.props;
-    const { title, descRt, ordinal, cost } = this.state;
-    const { pledgeId } = match.params;
-    if (!isNew(pledgeId)) {
-      //onUpdateProvider();
-    } else {
-      //onAddProvider();
-    }
+  handleConfirmDelete = () => {
+    this.handleDelete();
   };
-
   handleDelete = () => {
     const { onDeleteProvider, match } = this.props;
     const { pledgeId } = match.params;
@@ -96,40 +86,67 @@ class EditPledge extends Component {
 
   handleCancel = () => {
     const { history } = this.props;
-    history.goBack();
-  };
-
-  handleConfirmDelete = () => {
-    this.handleDelete();
+    history.push(`/${paths.pledges}`);
   };
 
   handleChange = event => {
     const { name, value } = event.target;
-    // console.log("name: ", name, " value: ", value);
     this.setState({
       [name]: value
     });
-    this.setDescRtState();
   };
 
-  setDescRtState = () => {
+  // As there is no onChange api for the mui-rte
+  // we need to first activate its save method to get the updated data
+  // The method called by the save, gets the data, so we can set the state from it
+  // Only when the state has been updated, can we save the pledge itself
+  // so use the setState callback to do this
+  // 1. activate save method on mui-rte
+  // 2. update the descRt value in state using the rte's data
+  // 3. wait for the state to be set
+  // 4. use the state to add/update the pledge
+  handleSaveWrapper = () => {
+    if (!this.rteRef.current) {
+      // If no rte, bypass to final save
+      this.handleSave();
+      return;
+    }
+    // Activates the rte's save function
     this.rteRef.current.save();
   };
-
-  handleRteData = data => {
-    console.log(data);
-    this.setState({
-      descRt: JSON.parse(data)
-    });
+  // The rte's save function
+  rteSave = data => {
+    this.setState(
+      {
+        descRt: JSON.parse(data)
+      },
+      this.handleSave
+    );
   };
-
-  handleCancel = () => {
-    const { history } = this.props;
-    history.push(`/${paths.pledges}`);
+  // The final save which actually adds/updates the pledge
+  handleSave = () => {
+    const { onAddPledge, onUpdatePledge, match } = this.props;
+    const { title, descRt, ordinal, cost } = this.state;
+    const { pledgeId } = match.params;
+    // Construct the pledge
+    const pledge = {
+      id: isNew(pledgeId) ? null : pledgeId,
+      title,
+      descRt,
+      ordinal,
+      cost
+    };
+    if (!isNew(pledgeId)) {
+      // If it doesn't have a new id, update it
+      onUpdatePledge(pledge);
+    } else {
+      // Add it if it has the new id
+      onAddPledge(pledge);
+    }
   };
 
   render() {
-    const { classes, history } = this.props;
+    const { classes } = this.props;
     const { title, descRt, ordinal, cost } = this.state;
     const commonProps = {
       inputProps: { className: classes.textFieldContainer },
@@ -180,7 +197,7 @@ class EditPledge extends Component {
               <div className={classes.rte}>
                 <MUIRichTextEditor
                   ref={this.rteRef}
-                  onSave={this.handleRteData}
+                  onSave={this.rteSave}
                   label="Description..."
                   value={JSON.stringify(descRt)}
                   controls={[
@@ -210,7 +227,7 @@ class EditPledge extends Component {
               className={classes.button}
               variant="contained"
               color="primary"
-              onClick={() => console.log("save")}
+              onClick={this.handleSaveWrapper}
             >
               Save
             </Button>
