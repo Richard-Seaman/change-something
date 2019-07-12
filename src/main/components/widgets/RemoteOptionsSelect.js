@@ -4,7 +4,7 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import PropTypes from "prop-types";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import FilledInput from "@material-ui/core/FilledInput";
+import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -62,7 +62,7 @@ function RemoteOptionsSelect({
     <FormControl
       className={overrideClassName || classes.formControl}
       error={!!error}
-      variant="filled"
+      variant="standard"
       disabled={disabled}
     >
       <InputLabel {...labelConfig} htmlFor={id}>
@@ -73,9 +73,7 @@ function RemoteOptionsSelect({
         name={id}
         onChange={handleChange}
         inputProps={{ className: classes.textFieldContainer }}
-        input={
-          <FilledInput name={id} id={id} readOnly={false} {...inputConfig} />
-        }
+        input={<Input name={id} id={id} readOnly={false} {...inputConfig} />}
         {...selectConfig}
       >
         {options}

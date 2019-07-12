@@ -28,6 +28,16 @@ const styles = theme => ({
     "&:hover": {
       borderBottom: "solid 2px #000000"
     }
+  },
+  buttonsContainer: {
+    marginTop: "16px",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  button: {
+    marginLeft: "8px",
+    marginRight: "8px"
   }
 });
 
@@ -113,8 +123,13 @@ class EditPledge extends Component {
     });
   };
 
+  handleCancel = () => {
+    const { history } = this.props;
+    history.push(`/${paths.pledges}`);
+  };
+
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
     const { title, descRt, ordinal, cost } = this.state;
     const commonProps = {
       inputProps: { className: classes.textFieldContainer },
@@ -122,6 +137,7 @@ class EditPledge extends Component {
       className: classes.textField,
       fullWidth: true
     };
+    const costOptions = [{ name: "Low" }, { name: "Medium" }, { name: "High" }];
     return (
       <div className={`${classes.viewPage} ${classes.topBorder}`}>
         <Grid container spacing={2} direction="row" justify="center">
@@ -147,12 +163,16 @@ class EditPledge extends Component {
           </Grid>
           <Grid item xs={3}>
             <ValidatedField
+              type="select"
+              label="Cost"
               id="cost"
               name="cost"
-              label="Cost"
+              values={costOptions}
               value={cost}
+              onChange={this.handleChange}
+              optionName="name"
+              optionValue="name"
               validators={[VALIDATORS_BY_NAME.REQUIRED]}
-              {...commonProps}
             />
           </Grid>
           {descRt && (
@@ -177,6 +197,24 @@ class EditPledge extends Component {
               </div>
             </Grid>
           )}
+          <div className={classes.buttonsContainer}>
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="secondary"
+              onClick={this.handleCancel}
+            >
+              Cancel
+            </Button>
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="primary"
+              onClick={() => console.log("save")}
+            >
+              Save
+            </Button>
+          </div>
         </Grid>
       </div>
     );
@@ -192,7 +230,8 @@ EditPledge.propTypes = {
   pledgeFB: PropTypes.object,
   onAddPledge: PropTypes.func.isRequired,
   onUpdatePledge: PropTypes.func.isRequired,
-  onDeletePledge: PropTypes.func.isRequired
+  onDeletePledge: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {

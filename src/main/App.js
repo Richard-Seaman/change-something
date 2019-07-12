@@ -15,7 +15,10 @@ const theme = createMuiTheme({
       dark: "#1B5E20",
       contrastText: "#FFFFFF"
     },
-    secondary: orange
+    secondary: {
+      ...orange,
+      contrastText: "#FFFFFF"
+    }
   },
   props: {
     MuiTypography: {
