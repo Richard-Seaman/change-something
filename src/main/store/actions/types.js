@@ -26,3 +26,9 @@ export const MIDDLEWARE_VALIDATE = "MIDDLEWARE_VALIDATE";
 export const CREATE_FIELD = "CREATE_FIELD";
 export const CLEAR_ERROR = "CLEAR_ERROR";
 export const VALIDATE_FIELD = "VALIDATE_FIELD";
+
+export const MAKE_TOAST = "MAKE_TOAST";
+export const TOAST_SUCCESS = "TOAST_SUCCESS";
+export const TOAST_ERROR = "TOAST_ERROR";
+export const TOAST_WARN = "TOAST_WARN";
+export const TOAST_INFO = "TOAST_INFO";

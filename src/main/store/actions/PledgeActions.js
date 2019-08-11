@@ -3,6 +3,12 @@ import { collections, storedAs } from "../firebaseConfig";
 import history from "../../utils/history";
 import { paths } from "../../routes/constants";
 import { MIDDLEWARE_VALIDATE } from "../actions/types";
+import {
+  toastError,
+  toastInfo,
+  toastSuccess,
+  toastWarning
+} from "./ToastActions";
 
 export const incrementCounter = (collection, docId, field, number) => {
   return (dispatch, getState, { getFirestore }) => {
@@ -66,14 +72,18 @@ export const addCommitment = pledgeId => {
           dispatch(
             incrementCounter(collections.PLEDGES, pledgeId, "counter", 1)
           );
+          //dispatch(toastSuccess(`Made Commitment!`));
         })
         .catch(err => {
           dispatch({
             type: actionTypes.ADD_COMMITMENT_FAILED,
             payload: err
           });
+          dispatch(toastError(`Error ${err}`));
+          console.error(`Error ${err}`);
         });
     } else {
+      dispatch(toastError(`Failed to add commitment: already exists!`));
       console.error("Failed to add commitment: ", "already exists!");
     }
   };
@@ -99,12 +109,15 @@ export const deleteCommitment = commitment => {
             -1
           )
         );
+        //dispatch(toastWarning(`Revoked Commitment...`));
       })
       .catch(err => {
         dispatch({
           type: actionTypes.DELETE_COMMITMENT_FAILED,
           payload: err
         });
+        dispatch(toastError(`Error ${err}`));
+        console.error(`Error ${err}`);
       });
   };
 };
@@ -132,21 +145,25 @@ export const addPledge = pledge => {
                 type: actionTypes.ADD_PLEDGE_SUCCESS,
                 payload: res
               });
-              console.log(`Added ${pledge.title}`);
+              console.log(`Added "${pledge.title}"`);
+              dispatch(toastSuccess(`Added "${pledge.title}"`));
             })
             .catch(err => {
               dispatch({
                 type: actionTypes.ADD_PLEDGE_FAILED,
                 payload: err
               });
-              console.log(`Error ${err}`);
+              dispatch(toastError(`Error ${err}`));
+              console.error(`Error ${err}`);
             });
         } else {
-          console.log(`A pledge already exists with that title`);
+          dispatch(toastError(`A pledge already exists with that title`));
+          console.error(`A pledge already exists with that title`);
         }
       })
       .catch(err => {
-        console.log(`Error ${err}`);
+        dispatch(toastError(`Error ${err}`));
+        console.error(`Error ${err}`);
       });
   };
 };
@@ -165,14 +182,16 @@ export const updatePledge = pledge => {
           type: actionTypes.UPDATE_PLEDGE_SUCCESS,
           payload: res
         });
-        console.log(`Updated ${pledge.title}`);
+        console.log(`Updated "${pledge.title}"`);
+        dispatch(toastSuccess(`Updated "${pledge.title}"`));
       })
       .catch(err => {
         dispatch({
           type: actionTypes.UPDATE_PLEDGE_FAILED,
           payload: err
         });
-        console.log(`Error ${err}`);
+        dispatch(toastError(`Error ${err}`));
+        console.error(`Error ${err}`);
       });
   };
 };
@@ -191,13 +210,15 @@ export const deletePledge = pledge => {
         });
         history.push(`/${paths.pledges}`);
         console.log(`Deleted ${pledge.title}`);
+        dispatch(toastSuccess(`Deleted "${pledge.title}"`));
       })
       .catch(err => {
         dispatch({
           type: actionTypes.DELETE_PLEDGE_FAILED,
           payload: err
         });
-        console.log(`Error ${err}`);
+        dispatch(toastError(`Error ${err}`));
+        console.error(`Error ${err}`);
       });
   };
 };

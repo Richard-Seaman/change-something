@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/styles";
 import { Switch, withRouter } from "react-router-dom";
 import { compose } from "redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 import renderRoutes from "../routes/renderRoutes";
 import pageRoutes from "../routes/pageRoutes";
@@ -43,6 +45,7 @@ class BaseLayout extends Component {
             <Switch>{renderRoutes(pageRoutes)}</Switch>
           </div>
         </div>
+        <ToastContainer />
       </div>
     );
   }

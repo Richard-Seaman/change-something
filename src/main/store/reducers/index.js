@@ -6,6 +6,7 @@ import { pledgesReducer } from "./PledgesReducer";
 import { loginReducer } from "./LoginReducer";
 import { navReducer } from "./NavReducer";
 import { validationReducer } from "./ValidationReducer";
+import { toastsReducer } from "./ToastReducer";
 
 export const initialState = {};
 
@@ -15,5 +16,6 @@ export const rootReducer = combineReducers({
   pledges: pledgesReducer,
   login: loginReducer,
   nav: navReducer,
-  validation: validationReducer
+  validation: validationReducer,
+  toasts: toastsReducer
 });

@@ -16,12 +16,20 @@ import {
 import { commonStyles } from "../../styles";
 import { queries } from "../../store/firebaseConfig";
 import { isNew, paths } from "../../routes/constants";
+import { pixels } from "../../constants";
 
 import ValidatedField from "../widgets/ValidatedField";
 import { VALIDATORS_BY_NAME } from "../../constants";
 
 const styles = theme => ({
   ...commonStyles,
+  root: {
+    display: "flex",
+    flexGrow: 1,
+    marginTop: pixels.gobalSpacing,
+    flexDirection: "column",
+    paddingBottom: "16px"
+  },
   rte: {
     borderBottom: "solid 1px #9e9e9e",
     "&:hover": {
@@ -168,7 +176,7 @@ class EditPledge extends Component {
       fullWidth: true
     };
     return (
-      <div className={`${classes.viewPage} ${classes.topBorder}`}>
+      <div className={classes.root}>
         <Grid container spacing={2} direction="row" justify="center">
           <Grid item xs={6}>
             <ValidatedField
