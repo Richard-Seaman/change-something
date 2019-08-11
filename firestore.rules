@@ -7,6 +7,7 @@ service cloud.firestore {
     match /pledges/{id} {
       allow read: if true;
       allow update: if isSignedIn();
+      allow create: if isModerator();
     }
     match /commitments/{id} {
       allow read: if isSignedIn();
@@ -34,6 +35,10 @@ service cloud.firestore {
 
     function isOwner(userId) {
       return request.auth.uid == userId
+    }
+
+    function isModerator() {
+      return request.auth.token.moderator == true;
     }
 
   }
