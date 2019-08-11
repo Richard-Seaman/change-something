@@ -14,6 +14,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 import { pixels } from "../../constants";
 import { paths } from "../../routes/constants";
@@ -33,7 +34,8 @@ const styles = theme => {
       display: "flex",
       flexGrow: 1,
       marginTop: pixels.gobalSpacing,
-      flexDirection: "column"
+      flexDirection: "column",
+      paddingBottom: "16px"
     },
     paper: {
       padding: "8px",
@@ -43,7 +45,22 @@ const styles = theme => {
       fontSize: theme.typography.pxToRem(24),
       fontWeight: theme.typography.fontWeightMedium,
       marginTop: "16px",
-      marginBottom: "16px"
+      marginBottom: "8px"
+    },
+    costContainer: {
+      width: "100%"
+    },
+    adminContainer: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      width: "100%"
+    },
+    loadingContainer: {
+      display: "flex",
+      flexDirection: "column",
+      width: "100%"
     }
   };
 };
@@ -87,6 +104,16 @@ class ListPledges extends Component {
     history.push(`/${paths.pledges}/${paths.new}`);
   };
 
+  renderLoading() {
+    const { classes } = this.props;
+    return (
+      <div className={classes.loadingContainer}>
+        <Typography>Pledges loading, please wait...</Typography>
+        <LinearProgress />
+      </div>
+    );
+  }
+
   renderPledgeItems(cost) {
     const {
       [storedAs.ALL_PLEDGES]: pledges,
@@ -99,6 +126,7 @@ class ListPledges extends Component {
       .sort((a, b) =>
         a.ordinal < b.ordinal ? -1 : a.ordinal > b.ordinal ? 1 : 0
       );
+    if (sortedPledges.length === 0) return this.renderLoading();
     return sortedPledges.map(pledge => {
       return (
         <PledgeItem
@@ -121,22 +149,22 @@ class ListPledges extends Component {
     const costs = ["Low", "Medium", "High"];
     return (
       <div className={classes.root}>
-        {claims.moderator && (
-          <div className={classes.buttonsContainer}>
-            <Button
-              className={classes.button}
-              variant="contained"
-              color="primary"
-              onClick={this.handleAddNewPledge}
-            >
-              {"New"}
-            </Button>
-          </div>
-        )}
         <Grid container spacing={2}>
+          {claims.moderator && (
+            <div className={classes.adminContainer}>
+              <Button
+                className={classes.button}
+                variant="contained"
+                color="primary"
+                onClick={this.handleAddNewPledge}
+              >
+                {"New"}
+              </Button>
+            </div>
+          )}
           {costs.map(cost => {
             return (
-              <div key={cost}>
+              <div key={cost} className={classes.costContainer}>
                 <Typography className={classes.costTitle}>
                   {cost} Cost
                 </Typography>
