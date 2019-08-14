@@ -43,6 +43,9 @@ const styles = theme => ({
   button: {
     marginLeft: "8px",
     marginRight: "8px"
+  },
+  editorContainer: {
+    width: "100%"
   }
 });
 
@@ -80,13 +83,15 @@ class PledgeItem extends React.Component {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.detailsContainer}>
           {pledge.descRt && (
-            <MUIRichTextEditor
-              label="Start typing..."
-              onSave={this.handleSaveText}
-              value={JSON.stringify(pledge.descRt)}
-              readOnly={true}
-              controls={[]}
-            />
+            <div className={classes.editorContainer}>
+              <MUIRichTextEditor
+                label="Start typing..."
+                onSave={this.handleSaveText}
+                value={JSON.stringify(pledge.descRt)}
+                readOnly={true}
+                controls={[]}
+              />
+            </div>
           )}
           <div className={classes.buttonsContainer}>
             <Reward
