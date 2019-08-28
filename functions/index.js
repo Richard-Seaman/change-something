@@ -99,9 +99,10 @@ exports.submit = functions.region(region).https.onRequest((req, res) => {
       from: req.body.email,
       replyTo: req.body.email,
       to: gmailEmail,
-      subject: `from my website ${req.body.email}`,
+      cc: req.body.email,
+      subject: `Change Something - ${req.body.name}`,
       text: req.body.message,
-      html: `<p>${req.body.message}`
+      html: `<p>${req.body.message}</p>`
     };
 
     mailTransport.sendMail(mailOptions);
