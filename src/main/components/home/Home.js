@@ -88,7 +88,7 @@ class Home extends Component {
           Look at the collection of suggested changes and click on one to commit
           to undertaking it. It is important to only select items that you are
           not currently doing as the purpose is to change something by 2020. You
-          will be asked to log on using a Facebook or Google account> This is
+          will be asked to log on using a Facebook or Google account. This is
           purely to make sure people rather than robots are making commitments!
           If you don’t have an account you can easily sign up for one with one
           of those companies.
