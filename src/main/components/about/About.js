@@ -37,7 +37,7 @@ class About extends Component {
           telling someone else about the site, you have become a member!
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
-          This campaign has been initiated by Richard Seaman and Chris Croly
+          This campaign has been initiated by Chris Croly and Richard Seaman
           both of whom are qualified engineers with a background in energy
           management.
         </Typography>

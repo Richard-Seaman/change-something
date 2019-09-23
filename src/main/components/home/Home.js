@@ -129,6 +129,14 @@ class Home extends Component {
           us know. If objecting to the inclusion of an item it is useful to
           provide backup information such as calculations and sources.
         </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={() => history.push("/contact")}
+        >
+          Contact Us
+        </Button>
 
         <Typography {...typoProps.title} className={classes.title}>
           Campaign principles
