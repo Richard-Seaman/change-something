@@ -140,6 +140,10 @@ class PledgeItem extends React.Component {
   }
 }
 
+PledgeItem.defaultProps = {
+  claims: {}
+};
+
 PledgeItem.propTypes = {
   classes: PropTypes.object.isRequired,
   pledge: PropTypes.object.isRequired,
