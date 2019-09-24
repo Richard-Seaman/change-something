@@ -51,9 +51,14 @@ export const typoProps = {
     align: "left"
   },
   subTitle: {
-    variant: "subtitle1",
-    color: "textPrimary",
+    variant: "h6",
+    color: "inherit",
     align: "left"
+  },
+  imageTextOverlay: {
+    variant: "h3",
+    color: "inherit",
+    align: "center"
   }
 };
 

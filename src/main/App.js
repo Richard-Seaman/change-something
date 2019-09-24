@@ -3,7 +3,6 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import orange from "@material-ui/core/colors/orange";
-import grey from "@material-ui/core/colors/grey";
 
 import store from "./store/Store";
 import BaseLayout from "./layouts/BaseLayout";

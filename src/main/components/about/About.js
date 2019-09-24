@@ -7,12 +7,22 @@ import Typography from "@material-ui/core/Typography";
 
 import { titles } from "../../navigation/navItems";
 import { setTitle } from "../../store/actions/NavActions";
-import { typoProps } from "../../constants";
+import { pixels, typoProps } from "../../constants";
 import { commonStyles } from "../../styles";
 
 const styles = theme => {
   return {
-    ...commonStyles
+    ...commonStyles,
+    root: {
+      display: "flex",
+      flexGrow: 1,
+      marginTop: pixels.gobalSpacing,
+      flexDirection: "column",
+      paddingBottom: "16px",
+      paddingLeft: pixels.gobalSpacing,
+      paddingRight: pixels.gobalSpacing,
+      maxWidth: "1500px"
+    }
   };
 };
 
@@ -25,7 +35,7 @@ class About extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
+      <div className={classes.root}>
         <Typography {...typoProps.para} className={classes.para}>
           This is a not for profit organisation. No payments are (or will ever)
           be made to its members and all expenses are paid directly by our

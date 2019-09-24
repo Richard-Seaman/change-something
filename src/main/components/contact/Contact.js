@@ -23,7 +23,10 @@ const styles = theme => ({
     flexGrow: 1,
     marginTop: pixels.gobalSpacing,
     flexDirection: "column",
-    paddingBottom: "16px"
+    paddingBottom: "16px",
+    paddingLeft: pixels.gobalSpacing,
+    paddingRight: pixels.gobalSpacing,
+    maxWidth: "1500px"
   },
   buttonsContainer: {
     marginTop: "16px",

@@ -26,12 +26,10 @@ const styles = theme => ({
     overflow: "auto"
   },
   baseLayoutPageContainer: {
-    paddingLeft: pixels.gobalSpacing,
-    paddingRight: pixels.gobalSpacing,
     display: "flex",
+    flexDirection: "column",
     margin: "0 auto",
-    //background: "red",
-    maxWidth: "1500px"
+    alignItems: "center"
   }
 });
 
