@@ -14,7 +14,7 @@ import { pixels } from "../constants";
 
 const styles = theme => ({
   baseLayoutContainer: {
-    background: theme.palette.primary.light,
+    background: "white",
     display: "flex",
     flexDirection: "column",
     flexWrap: "nowrap",
@@ -29,7 +29,9 @@ const styles = theme => ({
     paddingLeft: pixels.gobalSpacing,
     paddingRight: pixels.gobalSpacing,
     display: "flex",
-    margin: "0 auto"
+    margin: "0 auto",
+    //background: "red",
+    maxWidth: "1500px"
   }
 });
 

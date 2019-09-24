@@ -18,7 +18,7 @@ export const sendMail = () => {
     };
     axios
       .post(
-        "https://europe-west1-change-something.cloudfunctions.net/mailReg365",
+        "https://europe-west1-change-something.cloudfunctions.net/gmail",
         data
       )
       .then(res => {

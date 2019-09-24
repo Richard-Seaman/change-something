@@ -16,7 +16,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
-import { pixels } from "../../constants";
+import { pixels, typoProps } from "../../constants";
 import { paths } from "../../routes/constants";
 import {
   addCommitment,
@@ -42,8 +42,6 @@ const styles = theme => {
       textAlign: "left"
     },
     costTitle: {
-      fontSize: theme.typography.pxToRem(24),
-      fontWeight: theme.typography.fontWeightMedium,
       marginTop: "16px",
       marginBottom: "8px"
     },
@@ -165,8 +163,8 @@ class ListPledges extends Component {
           {costs.map(cost => {
             return (
               <div key={cost} className={classes.costContainer}>
-                <Typography className={classes.costTitle}>
-                  {cost} Cost
+                <Typography {...typoProps.title} className={classes.costTitle}>
+                  {cost.toUpperCase()} COST
                 </Typography>
                 {this.renderPledgeItems(cost)}
               </div>

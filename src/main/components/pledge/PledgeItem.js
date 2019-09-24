@@ -46,6 +46,12 @@ const styles = theme => ({
   },
   editorContainer: {
     width: "100%"
+  },
+  expansionPanel: {
+    background: "#EEEEEE"
+  },
+  expansionPanelCommitted: {
+    background: "#81C784"
   }
 });
 
@@ -65,7 +71,11 @@ class PledgeItem extends React.Component {
       claims
     } = this.props;
     return (
-      <ExpansionPanel>
+      <ExpansionPanel
+        className={
+          commitment ? classes.expansionPanelCommitted : classes.expansionPanel
+        }
+      >
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -109,7 +119,7 @@ class PledgeItem extends React.Component {
               <Button
                 className={classes.button}
                 variant="outlined"
-                color={commitment ? "secondary" : "primary"}
+                color={commitment ? "default" : "primary"}
                 onClick={
                   commitment
                     ? () => {

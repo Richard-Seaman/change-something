@@ -16,14 +16,9 @@ const styles = theme => {
     ...commonStyles,
     root: {
       paddingBottom: "32px"
-      // display: "flex",
-      // flexDirection: "column",
-      // justifyContent: "center"
     },
     button: {
       marginTop: "16px"
-      // width: "300px",
-      // alignSelf: "center"
     }
   };
 };
@@ -39,7 +34,7 @@ class Home extends Component {
     return (
       <div className={classes.root}>
         <Typography {...typoProps.title} className={classes.title}>
-          Introduction
+          INTRODUCTION
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
           The <i>“change something”</i> movement is a campaign designed to
@@ -75,7 +70,7 @@ class Home extends Component {
         </Button>
 
         <Typography {...typoProps.title} className={classes.title}>
-          How this works
+          HOW THIS WORKS
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
           Potential changes are listed roughly by cost. The cost of some changes
@@ -108,7 +103,7 @@ class Home extends Component {
         </Typography>
 
         <Typography {...typoProps.title} className={classes.title}>
-          Join the Campaign
+          JOIN THE CAMPAIGN
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
           Everyone is welcome to join this campaign. Simply by making a
@@ -139,16 +134,13 @@ class Home extends Component {
         </Button>
 
         <Typography {...typoProps.title} className={classes.title}>
-          Campaign principles
+          CAMPAIGN PRINCIPLES
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
           The goal of this campaign is it encourage real changes that reduce
           energy use. To replace talk with action and to actually
-          <i>“change something”</i>.
-        </Typography>
-        <Typography {...typoProps.para} className={classes.para}>
-          There are several principles that should be followed when discussing
-          the campaign:
+          <i>“change something”</i>. There are several principles that should be
+          followed when discussing the campaign:
         </Typography>
         <Typography {...typoProps.subTitle} className={classes.subTitle}>
           Global Warming

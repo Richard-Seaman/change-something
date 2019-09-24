@@ -46,13 +46,13 @@ export const typoProps = {
     align: "left"
   },
   title: {
-    variant: "h4",
+    variant: "h6",
     color: "inherit",
     align: "left"
   },
   subTitle: {
-    variant: "h6",
-    color: "inherit",
+    variant: "subtitle1",
+    color: "textPrimary",
     align: "left"
   }
 };
