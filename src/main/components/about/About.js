@@ -36,10 +36,13 @@ class About extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
+        <Typography {...typoProps.subTitle} className={classes.subTitle}>
+          A little about us...
+        </Typography>
         <Typography {...typoProps.para} className={classes.para}>
-          This is a not for profit organisation. No payments are (or will ever)
-          be made to its members and all expenses are paid directly by our
-          volunteers.
+          This campaign has been initiated by Chris Croly and Richard Seaman,
+          both of whom are qualified engineers with a background in energy
+          management.
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
           The organisation is organic which means that anyone can join and
@@ -47,9 +50,9 @@ class About extends Component {
           telling someone else about the site, you have become a member!
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
-          This campaign has been initiated by Chris Croly and Richard Seaman
-          both of whom are qualified engineers with a background in energy
-          management.
+          This is a not for profit organisation. No payments are (or will ever)
+          be made to its members and all expenses are paid directly by our
+          volunteers.
         </Typography>
       </div>
     );

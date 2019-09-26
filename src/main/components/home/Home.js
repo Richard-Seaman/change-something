@@ -24,7 +24,8 @@ const styles = theme => {
     },
     contentContainer: {
       maxWidth: "1500px",
-      margin: "0 16px"
+      margin: "0 16px",
+      padding: "0 16px"
     },
     button: {
       margin: "16px auto"
@@ -47,6 +48,10 @@ const styles = theme => {
       color: "white",
       display: "flex",
       flexDirection: "column"
+    },
+    actionButtonContainer: {},
+    tabsContainer: {
+      margin: "0 16px"
     }
   };
 };
@@ -257,15 +262,17 @@ class Home extends Component {
             <Typography {...typoProps.imageTextOverlay}>
               STOP DEBATING, START ACTING
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => history.push("/pledges")}
-            >
-              I'm ready to Change Something
-            </Button>
           </div>
+        </div>
+        <div className={classes.actionButtonContainer}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => history.push("/pledges")}
+          >
+            I'm ready to Change Something
+          </Button>
         </div>
         <div className={classes.tabsContainer}>
           <Tabs
@@ -274,6 +281,7 @@ class Home extends Component {
             indicatorColor="primary"
             textColor="primary"
             centered
+            variant="scrollable"
           >
             <Tab label="INTRODUCTION" />
             <Tab label="HOW THIS WORKS" />

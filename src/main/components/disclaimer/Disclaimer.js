@@ -36,6 +36,9 @@ class Disclaimer extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
+        <Typography {...typoProps.subTitle} className={classes.subTitle}>
+          Take note...
+        </Typography>
         <Typography {...typoProps.para} className={classes.para}>
           Nothing on this site shall be construed as legal, financial or
           construction advice. Individuals take full responsibility for any

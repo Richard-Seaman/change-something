@@ -9,7 +9,7 @@ import { Button } from "@material-ui/core";
 import { titles } from "../../navigation/navItems";
 import { setTitle } from "../../store/actions/NavActions";
 import { commonStyles } from "../../styles";
-import { pixels } from "../../constants";
+import { pixels, typoProps } from "../../constants";
 import { sendMail } from "../../store/actions/ContactActions";
 
 import ValidatedField from "../widgets/ValidatedField";
@@ -26,7 +26,8 @@ const styles = theme => ({
     paddingBottom: "16px",
     paddingLeft: pixels.gobalSpacing,
     paddingRight: pixels.gobalSpacing,
-    maxWidth: "1500px"
+    maxWidth: "1500px",
+    width: "100%"
   },
   buttonsContainer: {
     marginTop: "16px",
@@ -70,6 +71,14 @@ class Contact extends Component {
 
     return (
       <Grid container spacing={2} direction="row" justify="center">
+        <Grid item xs={12}>
+          <Typography {...typoProps.subTitle} className={classes.subTitle}>
+            We'd love to hear from you!
+          </Typography>
+          <Typography {...typoProps.para} className={classes.para}>
+            Use the contact form below to send us a message.
+          </Typography>
+        </Grid>
         <Grid item xs={6}>
           <ValidatedField
             id="name"

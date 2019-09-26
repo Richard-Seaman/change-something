@@ -21,7 +21,8 @@ const styles = theme => {
       paddingBottom: "16px",
       paddingLeft: pixels.gobalSpacing,
       paddingRight: pixels.gobalSpacing,
-      maxWidth: "1500px"
+      maxWidth: "1500px",
+      width: "100%"
     }
   };
 };
@@ -36,13 +37,21 @@ class Privacy extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
+        <Typography {...typoProps.subTitle} className={classes.subTitle}>
+          Short and sweet...
+        </Typography>
         <Typography {...typoProps.para} className={classes.para}>
           Facebook or Google verification is used to ensure that robots are not
-          making commitments. We will never pass on your details to third
-          parties or use your details to advertise any commercial services to
-          you. We may very occasionally send you updates relating to this
-          campaign but will never offer any service or products or ask for any
-          form of payment.
+          making commitments.
+        </Typography>
+        <Typography {...typoProps.para} className={classes.para}>
+          We will never pass on your details to third parties or use your
+          details to advertise any commercial services to you.
+        </Typography>
+        <Typography {...typoProps.para} className={classes.para}>
+          We may very occasionally send you updates relating to this campaign
+          but will never offer any service or products or ask for any form of
+          payment.
         </Typography>
       </div>
     );

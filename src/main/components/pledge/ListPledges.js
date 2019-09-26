@@ -38,6 +38,7 @@ const styles = theme => {
       paddingBottom: "16px",
       paddingLeft: pixels.gobalSpacing,
       paddingRight: pixels.gobalSpacing,
+      width: "100%",
       maxWidth: "1500px"
     },
     paper: {
