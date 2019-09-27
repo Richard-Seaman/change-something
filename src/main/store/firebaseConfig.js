@@ -16,6 +16,24 @@ export const collections = {
 };
 
 export const storedAs = {
-  myCommitments: "myCommitments",
-  allPledges: "allPledges"
+  MY_COMMITMENTS: "myCommitments",
+  ALL_PLEDGES: "allPledges",
+  PLEDGE: "pledge",
+  PROVIDERS_UNIQUE_CHECK: "providerUniqueCheck"
+};
+
+export const queries = {
+  getPledges: () => {
+    return {
+      collection: collections.PLEDGES,
+      storeAs: storedAs.ALL_PLEDGES
+    };
+  },
+  getPledge: pledgeId => {
+    return {
+      collection: collections.PLEDGES,
+      doc: pledgeId,
+      storeAs: storedAs.PLEDGE
+    };
+  }
 };

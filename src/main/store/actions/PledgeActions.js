@@ -1,5 +1,14 @@
 import * as actionTypes from "./types";
 import { collections, storedAs } from "../firebaseConfig";
+import history from "../../utils/history";
+import { paths } from "../../routes/constants";
+import { MIDDLEWARE_VALIDATE } from "../actions/types";
+import {
+  toastError,
+  toastInfo,
+  toastSuccess,
+  toastWarning
+} from "./ToastActions";
 
 export const incrementCounter = (collection, docId, field, number) => {
   return (dispatch, getState, { getFirestore }) => {
@@ -43,7 +52,7 @@ export const addCommitment = pledgeId => {
       userId,
       userDisplayName
     };
-    const myCommitments = state.firestore.ordered[storedAs.myCommitments];
+    const myCommitments = state.firestore.ordered[storedAs.MY_COMMITMENTS];
     // First check if commitment already made
     if (
       !myCommitments.some(
@@ -63,14 +72,18 @@ export const addCommitment = pledgeId => {
           dispatch(
             incrementCounter(collections.PLEDGES, pledgeId, "counter", 1)
           );
+          //dispatch(toastSuccess(`Made Commitment!`));
         })
         .catch(err => {
           dispatch({
             type: actionTypes.ADD_COMMITMENT_FAILED,
             payload: err
           });
+          dispatch(toastError(`Error ${err}`));
+          console.error(`Error ${err}`);
         });
     } else {
+      dispatch(toastError(`Failed to add commitment: already exists!`));
       console.error("Failed to add commitment: ", "already exists!");
     }
   };
@@ -96,12 +109,116 @@ export const deleteCommitment = commitment => {
             -1
           )
         );
+        //dispatch(toastWarning(`Revoked Commitment...`));
       })
       .catch(err => {
         dispatch({
           type: actionTypes.DELETE_COMMITMENT_FAILED,
           payload: err
         });
+        dispatch(toastError(`Error ${err}`));
+        console.error(`Error ${err}`);
+      });
+  };
+};
+
+export const addPledge = pledge => {
+  return (dispatch, getState, { getFirestore }) => {
+    // Make sure fields are valid
+    if (!dispatch({ type: MIDDLEWARE_VALIDATE })) return;
+    const firestore = getFirestore();
+    // First check if title already taken
+    firestore
+      .get({
+        collection: collections.PLEDGES,
+        where: [["title", "==", pledge.title]],
+        storeAs: storedAs.PLEDGES_UNIQUE_CHECK
+      })
+      .then(snapshot => {
+        if (snapshot.size === 0) {
+          firestore
+            .collection(collections.PLEDGES)
+            .add({ ...pledge })
+            .then(res => {
+              history.push(`/${paths.pledges}/${res.id}`);
+              dispatch({
+                type: actionTypes.ADD_PLEDGE_SUCCESS,
+                payload: res
+              });
+              console.log(`Added "${pledge.title}"`);
+              dispatch(toastSuccess(`Added "${pledge.title}"`));
+            })
+            .catch(err => {
+              dispatch({
+                type: actionTypes.ADD_PLEDGE_FAILED,
+                payload: err
+              });
+              dispatch(toastError(`Error ${err}`));
+              console.error(`Error ${err}`);
+            });
+        } else {
+          dispatch(toastError(`A pledge already exists with that title`));
+          console.error(`A pledge already exists with that title`);
+        }
+      })
+      .catch(err => {
+        dispatch(toastError(`Error ${err}`));
+        console.error(`Error ${err}`);
+      });
+  };
+};
+
+export const updatePledge = pledge => {
+  return (dispatch, getState, { getFirestore }) => {
+    // Make sure fields are valid
+    if (!dispatch({ type: MIDDLEWARE_VALIDATE })) return;
+    const firestore = getFirestore();
+    firestore
+      .collection(collections.PLEDGES)
+      .doc(pledge.id)
+      .update(pledge)
+      .then(res => {
+        dispatch({
+          type: actionTypes.UPDATE_PLEDGE_SUCCESS,
+          payload: res
+        });
+        console.log(`Updated "${pledge.title}"`);
+        dispatch(toastSuccess(`Updated "${pledge.title}"`));
+      })
+      .catch(err => {
+        dispatch({
+          type: actionTypes.UPDATE_PLEDGE_FAILED,
+          payload: err
+        });
+        dispatch(toastError(`Error ${err}`));
+        console.error(`Error ${err}`);
+      });
+  };
+};
+
+export const deletePledge = pledge => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+    firestore
+      .collection(collections.PLEDGES)
+      .doc(pledge.id)
+      .delete()
+      .then(res => {
+        dispatch({
+          type: actionTypes.DELETE_PLEDGE_SUCCESS,
+          payload: res
+        });
+        history.push(`/${paths.pledges}`);
+        console.log(`Deleted ${pledge.title}`);
+        dispatch(toastSuccess(`Deleted "${pledge.title}"`));
+      })
+      .catch(err => {
+        dispatch({
+          type: actionTypes.DELETE_PLEDGE_FAILED,
+          payload: err
+        });
+        dispatch(toastError(`Error ${err}`));
+        console.error(`Error ${err}`);
       });
   };
 };

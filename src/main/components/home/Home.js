@@ -5,6 +5,8 @@ import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 import { titles } from "../../navigation/navItems";
 import { setTitle } from "../../store/actions/NavActions";
@@ -15,32 +17,63 @@ const styles = theme => {
   return {
     ...commonStyles,
     root: {
-      paddingBottom: "32px"
-      // display: "flex",
-      // flexDirection: "column",
-      // justifyContent: "center"
+      paddingBottom: "32px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    },
+    contentContainer: {
+      maxWidth: "1500px",
+      margin: "0 16px",
+      padding: "0 16px"
     },
     button: {
-      marginTop: "16px"
-      // width: "300px",
-      // alignSelf: "center"
+      margin: "16px auto"
+    },
+    featureImageContainer: {
+      height: "400px",
+      width: "100%",
+      position: "relative"
+    },
+    featureImage: {
+      width: "100%",
+      height: "100%",
+      objectFit: "cover"
+    },
+    imageOverlayContainer: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      color: "white",
+      display: "flex",
+      flexDirection: "column"
+    },
+    actionButtonContainer: {},
+    tabsContainer: {
+      margin: "0 16px"
     }
   };
 };
 
 class Home extends Component {
+  state = {
+    tabIndex: 0
+  };
+
   componentDidMount() {
     const { onSetTitle } = this.props;
     onSetTitle(titles.home);
   }
 
-  render() {
-    const { classes, history } = this.props;
+  handleChangeTab = (event, newValue) => {
+    this.setState({ tabIndex: newValue });
+  };
+
+  renderIntroduction() {
+    const { classes } = this.props;
     return (
-      <div className={classes.root}>
-        <Typography {...typoProps.title} className={classes.title}>
-          Introduction
-        </Typography>
+      <div className={classes.contentContainer}>
         <Typography {...typoProps.para} className={classes.para}>
           The <i>“change something”</i> movement is a campaign designed to
           encourage and support individuals and households in Ireland to commit
@@ -65,18 +98,14 @@ class Home extends Component {
           also results in cost savings. This campaign encourages everyone to
           select changes that match their means.
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={() => history.push("/pledges")}
-        >
-          I'm ready to Change Something
-        </Button>
+      </div>
+    );
+  }
 
-        <Typography {...typoProps.title} className={classes.title}>
-          How this works
-        </Typography>
+  renderHowThisWorks() {
+    const { classes } = this.props;
+    return (
+      <div className={classes.contentContainer}>
         <Typography {...typoProps.para} className={classes.para}>
           Potential changes are listed roughly by cost. The cost of some changes
           will depend on your circumstances. For example: if you have a
@@ -88,7 +117,7 @@ class Home extends Component {
           Look at the collection of suggested changes and click on one to commit
           to undertaking it. It is important to only select items that you are
           not currently doing as the purpose is to change something by 2020. You
-          will be asked to log on using a Facebook or Google account> This is
+          will be asked to log on using a Facebook or Google account. This is
           purely to make sure people rather than robots are making commitments!
           If you don’t have an account you can easily sign up for one with one
           of those companies.
@@ -106,10 +135,14 @@ class Home extends Component {
           email and we will try to add it to the list if it is useful for
           others.
         </Typography>
+      </div>
+    );
+  }
 
-        <Typography {...typoProps.title} className={classes.title}>
-          Join the Campaign
-        </Typography>
+  renderJoin() {
+    const { classes, history } = this.props;
+    return (
+      <div className={classes.contentContainer}>
         <Typography {...typoProps.para} className={classes.para}>
           Everyone is welcome to join this campaign. Simply by making a
           commitment to change something and by telling others about the site,
@@ -129,18 +162,27 @@ class Home extends Component {
           us know. If objecting to the inclusion of an item it is useful to
           provide backup information such as calculations and sources.
         </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={() => history.push("/contact")}
+        >
+          Contact Us
+        </Button>
+      </div>
+    );
+  }
 
-        <Typography {...typoProps.title} className={classes.title}>
-          Campaign principles
-        </Typography>
+  renderPrinciples() {
+    const { classes } = this.props;
+    return (
+      <div className={classes.contentContainer}>
         <Typography {...typoProps.para} className={classes.para}>
           The goal of this campaign is it encourage real changes that reduce
           energy use. To replace talk with action and to actually
-          <i>“change something”</i>.
-        </Typography>
-        <Typography {...typoProps.para} className={classes.para}>
-          There are several principles that should be followed when discussing
-          the campaign:
+          <i>“change something”</i>. There are several principles that should be
+          followed when discussing the campaign:
         </Typography>
         <Typography {...typoProps.subTitle} className={classes.subTitle}>
           Global Warming
@@ -163,7 +205,7 @@ class Home extends Component {
           that reduce material consumption, recycling, local pollution etc. Our
           intention is to keep things as simple as possible and cover only items
           that reduce energy consumption. In many cases there will be associated
-          reductions in carbon emissions, material waste, pollution etc,
+          reductions in carbon emissions, material waste, pollution etc.
         </Typography>
         <Typography {...typoProps.subTitle} className={classes.subTitle}>
           Change Ranking
@@ -201,6 +243,55 @@ class Home extends Component {
           referring to a particular manufacturer and will address the issue
           where we are informed of equivalent alternatives.
         </Typography>
+      </div>
+    );
+  }
+
+  render() {
+    const { classes, history } = this.props;
+    const { tabIndex } = this.state;
+    return (
+      <div className={classes.root}>
+        <div className={classes.featureImageContainer}>
+          <img
+            className={classes.featureImage}
+            src="/images/background-min.jpg"
+            alt="Irish Countryside"
+          />
+          <div className={classes.imageOverlayContainer}>
+            <Typography {...typoProps.imageTextOverlay}>
+              STOP DEBATING, START ACTING
+            </Typography>
+          </div>
+        </div>
+        <div className={classes.actionButtonContainer}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => history.push("/pledges")}
+          >
+            I'm ready to Change Something
+          </Button>
+        </div>
+        <div className={classes.tabsContainer}>
+          <Tabs
+            value={tabIndex}
+            onChange={this.handleChangeTab}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="scrollable"
+          >
+            <Tab label="INTRODUCTION" />
+            <Tab label="HOW THIS WORKS" />
+            <Tab label="JOIN" />
+            <Tab label="PRINCIPLES" />
+          </Tabs>
+        </div>
+        {tabIndex === 0 && this.renderIntroduction()}
+        {tabIndex === 1 && this.renderHowThisWorks()}
+        {tabIndex === 2 && this.renderJoin()}
+        {tabIndex === 3 && this.renderPrinciples()}
       </div>
     );
   }

@@ -7,12 +7,22 @@ import Typography from "@material-ui/core/Typography";
 
 import { titles } from "../../navigation/navItems";
 import { setTitle } from "../../store/actions/NavActions";
-import { typoProps } from "../../constants";
+import { pixels, typoProps } from "../../constants";
 import { commonStyles } from "../../styles";
 
 const styles = theme => {
   return {
-    ...commonStyles
+    ...commonStyles,
+    root: {
+      display: "flex",
+      flexGrow: 1,
+      marginTop: pixels.gobalSpacing,
+      flexDirection: "column",
+      paddingBottom: "16px",
+      paddingLeft: pixels.gobalSpacing,
+      paddingRight: pixels.gobalSpacing,
+      maxWidth: "1500px"
+    }
   };
 };
 
@@ -25,7 +35,10 @@ class Disclaimer extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
+      <div className={classes.root}>
+        <Typography {...typoProps.subTitle} className={classes.subTitle}>
+          Take note...
+        </Typography>
         <Typography {...typoProps.para} className={classes.para}>
           Nothing on this site shall be construed as legal, financial or
           construction advice. Individuals take full responsibility for any

@@ -13,8 +13,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
-import { pixels } from "../../constants";
+import { pixels, typoProps } from "../../constants";
+import { paths } from "../../routes/constants";
 import {
   addCommitment,
   deleteCommitment
@@ -22,17 +25,44 @@ import {
 import { showLogin } from "../../store/actions/LoginActions";
 import { setTitle } from "../../store/actions/NavActions";
 import { titles } from "../../navigation/navItems";
+import { commonStyles } from "../../styles";
 
 const styles = theme => {
   return {
+    ...commonStyles,
     root: {
       display: "flex",
       flexGrow: 1,
-      marginTop: pixels.gobalSpacing
+      marginTop: pixels.gobalSpacing,
+      flexDirection: "column",
+      paddingBottom: "16px",
+      paddingLeft: pixels.gobalSpacing,
+      paddingRight: pixels.gobalSpacing,
+      width: "100%",
+      maxWidth: "1500px"
     },
     paper: {
       padding: "8px",
       textAlign: "left"
+    },
+    costTitle: {
+      marginTop: "16px",
+      marginBottom: "8px"
+    },
+    costContainer: {
+      width: "100%"
+    },
+    adminContainer: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      width: "100%"
+    },
+    loadingContainer: {
+      display: "flex",
+      flexDirection: "column",
+      width: "100%"
     }
   };
 };
@@ -71,38 +101,80 @@ class ListPledges extends Component {
     } else onDeleteCommitment(commitment);
   };
 
-  renderPledgeItems() {
-    const {
-      [storedAs.allPledges]: pledges,
-      [storedAs.myCommitments]: myCommitments,
-      uid
-    } = this.props;
-    const sortedPledges = [...pledges].sort((a, b) =>
-      a.ordinal < b.ordinal ? -1 : a.ordinal > b.ordinal ? 1 : 0
+  handleAddNewPledge = () => {
+    const { history } = this.props;
+    history.push(`/${paths.pledges}/${paths.new}`);
+  };
+
+  renderLoading() {
+    const { classes } = this.props;
+    return (
+      <div className={classes.loadingContainer}>
+        <Typography>Pledges loading, please wait...</Typography>
+        <LinearProgress />
+      </div>
     );
+  }
+
+  renderPledgeItems(cost) {
+    const {
+      [storedAs.ALL_PLEDGES]: pledges,
+      [storedAs.MY_COMMITMENTS]: myCommitments,
+      uid,
+      history
+    } = this.props;
+    const sortedPledges = [...pledges]
+      .filter(p => p.cost === cost)
+      .sort((a, b) =>
+        a.ordinal < b.ordinal ? -1 : a.ordinal > b.ordinal ? 1 : 0
+      );
+    if (sortedPledges.length === 0) return this.renderLoading();
     return sortedPledges.map(pledge => {
       return (
-        <Grid item xs={12} sm={6} lg={4} key={pledge.id}>
-          <PledgeItem
-            pledge={pledge}
-            commitment={myCommitments.find(
-              c => c.userId === uid && c.pledgeId === pledge.id
-            )}
-            onAddCommitment={this.handleAddCommitment}
-            onDeleteCommitment={this.handleShowDeleteCommitment}
-          />
-        </Grid>
+        <PledgeItem
+          key={pledge.id}
+          pledge={pledge}
+          commitment={myCommitments.find(
+            c => c.userId === uid && c.pledgeId === pledge.id
+          )}
+          onAddCommitment={this.handleAddCommitment}
+          onDeleteCommitment={this.handleShowDeleteCommitment}
+          history={history}
+        />
       );
     });
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, claims } = this.props;
     const { deleteDialogOpen, commitment } = this.state;
+    const costs = ["Low", "Medium", "High"];
     return (
       <div className={classes.root}>
         <Grid container spacing={2}>
-          {this.renderPledgeItems()}
+          {claims.moderator && (
+            <div className={classes.adminContainer}>
+              <Button
+                className={classes.button}
+                variant="contained"
+                color="primary"
+                onClick={this.handleAddNewPledge}
+              >
+                {"New"}
+              </Button>
+            </div>
+          )}
+          {costs.map(cost => {
+            return (
+              <div key={cost} className={classes.costContainer}>
+                <Typography {...typoProps.title} className={classes.costTitle}>
+                  {cost.toUpperCase()} COST
+                </Typography>
+                {this.renderPledgeItems(cost)}
+              </div>
+            );
+          })}
+
           <Dialog
             open={deleteDialogOpen}
             onClose={this.handleHideDeleteCommitment}
@@ -138,11 +210,15 @@ class ListPledges extends Component {
   }
 }
 
+ListPledges.defaultProps = {
+  claims: {}
+};
+
 ListPledges.propTypes = {
+  claims: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  checked: PropTypes.object,
-  [storedAs.allPledges]: PropTypes.array,
-  [storedAs.myCommitments]: PropTypes.array,
+  [storedAs.ALL_PLEDGES]: PropTypes.array,
+  [storedAs.MY_COMMITMENTS]: PropTypes.array,
   onAddCommitment: PropTypes.func.isRequired,
   onDeleteCommitment: PropTypes.func.isRequired,
   onShowLogin: PropTypes.func.isRequired,
@@ -151,11 +227,11 @@ ListPledges.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    checked: state.pledges.checked || {},
     uid: state.firebase.auth.uid,
-    [storedAs.allPledges]: state.firestore.ordered[storedAs.allPledges] || [],
-    [storedAs.myCommitments]:
-      state.firestore.ordered[storedAs.myCommitments] || []
+    [storedAs.ALL_PLEDGES]: state.firestore.ordered[storedAs.ALL_PLEDGES] || [],
+    [storedAs.MY_COMMITMENTS]:
+      state.firestore.ordered[storedAs.MY_COMMITMENTS] || [],
+    claims: state.login.claims
   };
 };
 
@@ -179,13 +255,13 @@ export default compose(
     const queries = [];
     queries.push({
       collection: collections.PLEDGES,
-      storeAs: storedAs.allPledges
+      storeAs: storedAs.ALL_PLEDGES
     });
     if (uid) {
       queries.push({
         collection: collections.COMMITMENTS,
         where: [["userId", "==", uid]],
-        storeAs: storedAs.myCommitments
+        storeAs: storedAs.MY_COMMITMENTS
       });
     }
     return queries;

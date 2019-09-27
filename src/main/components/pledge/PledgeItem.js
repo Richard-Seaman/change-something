@@ -2,126 +2,157 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
+import { connect } from "react-redux";
+import { compose } from "redux";
 
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import Reward from "react-rewards";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MUIRichTextEditor from "mui-rte";
 
-import { colors } from "../../constants";
-
-import Level from "./Level";
+import { paths } from "../../routes/constants";
 
 const styles = theme => ({
-  card: {},
-  firstButton: {
-    marginLeft: "auto"
+  summaryTextContainer: {
+    flexDirection: "column"
   },
-  cardHeaderContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "nowrap",
-    width: "100%",
+  detailsContainer: {
+    flexDirection: "column",
     alignItems: "center"
   },
-  cardHeaderTextContainer: {
-    display: "flex",
-    flexDirection: "column",
-    flexGrow: "2"
+  heading: {
+    fontWeight: theme.typography.fontWeightRegular
   },
-  cardHeaderSymbolContainer: {
+  commitmentsText: {
+    fontSize: theme.typography.pxToRem(14),
+    fontWeight: theme.typography.fontWeightLight
+  },
+  detailsText: {
+    marginBottom: "8px",
+    alignSelf: "flex-start"
+  },
+  buttonsContainer: {
+    marginTop: "16px",
     display: "flex",
-    flexDirection: "column",
-    margin: "16px"
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  button: {
+    marginLeft: "8px",
+    marginRight: "8px"
+  },
+  editorContainer: {
+    width: "100%"
+  },
+  expansionPanel: {
+    background: "#EEEEEE"
+  },
+  expansionPanelCommitted: {
+    background: "#81C784"
   }
 });
 
 class PledgeItem extends React.Component {
+  handleEditPledge = pledge => {
+    const { history } = this.props;
+    history.push(`${paths.pledges}/${pledge.id}`);
+  };
+
   render() {
     const {
       classes,
       pledge,
       onAddCommitment,
       onDeleteCommitment,
-      commitment
+      commitment,
+      claims
     } = this.props;
     return (
-      <Card
-        className={classes.card}
-        style={
-          commitment
-            ? { background: colors.grey1 }
-            : { background: colors.grey2 }
+      <ExpansionPanel
+        className={
+          commitment ? classes.expansionPanelCommitted : classes.expansionPanel
         }
-        raised={commitment ? true : false}
       >
-        <div className={classes.cardHeaderContainer}>
-          <div className={classes.cardHeaderTextContainer}>
-            <CardHeader
-              title={pledge.title}
-              subheader={`${pledge.counter || 0} ${
-                pledge.counter === 1 ? "commitment" : "commitments"
-              }`}
-            />
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <div className={classes.summaryTextContainer}>
+            <Typography className={classes.heading}>{pledge.title}</Typography>
+
+            <Typography
+              className={classes.commitmentsText}
+            >{`${pledge.counter || 0} ${
+              pledge.counter === 1 ? "commitment" : "commitments"
+            }`}</Typography>
           </div>
-          <div className={classes.cardHeaderSymbolContainer}>
-            <Level level={pledge.cost} symbol="euro_symbol" />
-            <Level level={pledge.effort} symbol="fitness_center" />
-            <Level level={pledge.reward} symbol="grade" />
-          </div>
-        </div>
-        <CardContent>
-          {pledge.desc && (
-            <Typography variant="body2" color="textSecondary" component="span">
-              {pledge.desc}
-            </Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails className={classes.detailsContainer}>
+          {pledge.descRt && (
+            <div className={classes.editorContainer}>
+              <MUIRichTextEditor
+                label="Start typing..."
+                onSave={this.handleSaveText}
+                value={JSON.stringify(pledge.descRt)}
+                readOnly={true}
+                controls={[]}
+              />
+            </div>
           )}
-        </CardContent>
-        <CardActions>
-          <Button
-            className={classes.firstButton}
-            size="small"
-            color="primary"
-            onClick={() => alert("Not ready yet...")}
-          >
-            Learn More
-          </Button>
-          <Reward
-            ref={ref => {
-              this.reward = ref;
-            }}
-            type={commitment ? "emoji" : "confetti"}
-            config={{
-              emoji: commitment
-                ? ["😡", "🔥", "❓", "❗"]
-                : ["♻️", "🌈", "☀️", "🌱"],
-              elementSize: commitment ? 30 : 15
-            }}
-          >
-            <Button
-              size="small"
-              color={commitment ? "secondary" : "primary"}
-              onClick={
-                commitment
-                  ? () => {
-                      onDeleteCommitment(commitment);
-                    }
-                  : () => {
-                      this.reward.rewardMe();
-                      onAddCommitment(pledge.id);
-                    }
-              }
+          <div className={classes.buttonsContainer}>
+            <Reward
+              ref={ref => {
+                this.reward = ref;
+              }}
+              type={commitment ? "emoji" : "confetti"}
+              config={{
+                emoji: commitment
+                  ? ["😡", "🔥", "❓", "❗"]
+                  : ["♻️", "🌈", "☀️", "🌱"],
+                elementSize: commitment ? 30 : 15
+              }}
             >
-              {commitment ? "Revoke Commitment" : "Make Commitment"}
-            </Button>
-          </Reward>
-        </CardActions>
-      </Card>
+              <Button
+                className={classes.button}
+                variant="outlined"
+                color={commitment ? "default" : "primary"}
+                onClick={
+                  commitment
+                    ? () => {
+                        onDeleteCommitment(commitment);
+                      }
+                    : () => {
+                        this.reward.rewardMe();
+                        onAddCommitment(pledge.id);
+                      }
+                }
+              >
+                {commitment ? "Revoke Commitment" : "Make Commitment"}
+              </Button>
+            </Reward>
+            {claims.moderator && (
+              <Button
+                className={classes.button}
+                variant="outlined"
+                onClick={() => this.handleEditPledge(pledge)}
+              >
+                {"Edit"}
+              </Button>
+            )}
+          </div>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
     );
   }
 }
+
+PledgeItem.defaultProps = {
+  claims: {}
+};
 
 PledgeItem.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -130,4 +161,20 @@ PledgeItem.propTypes = {
   onDeleteCommitment: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(PledgeItem);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    claims: state.login.claims
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  withStyles(styles)
+)(PledgeItem);

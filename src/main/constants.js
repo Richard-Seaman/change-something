@@ -46,7 +46,7 @@ export const typoProps = {
     align: "left"
   },
   title: {
-    variant: "h4",
+    variant: "h6",
     color: "inherit",
     align: "left"
   },
@@ -54,5 +54,16 @@ export const typoProps = {
     variant: "h6",
     color: "inherit",
     align: "left"
+  },
+  imageTextOverlay: {
+    variant: "h3",
+    color: "inherit",
+    align: "center"
   }
+};
+
+export const VALIDATORS_BY_NAME = {
+  REQUIRED: "required",
+  STRING: "string",
+  NUMBER: "number"
 };

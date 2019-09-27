@@ -7,12 +7,22 @@ import Typography from "@material-ui/core/Typography";
 
 import { titles } from "../../navigation/navItems";
 import { setTitle } from "../../store/actions/NavActions";
-import { typoProps } from "../../constants";
+import { pixels, typoProps } from "../../constants";
 import { commonStyles } from "../../styles";
 
 const styles = theme => {
   return {
-    ...commonStyles
+    ...commonStyles,
+    root: {
+      display: "flex",
+      flexGrow: 1,
+      marginTop: pixels.gobalSpacing,
+      flexDirection: "column",
+      paddingBottom: "16px",
+      paddingLeft: pixels.gobalSpacing,
+      paddingRight: pixels.gobalSpacing,
+      maxWidth: "1500px"
+    }
   };
 };
 
@@ -25,11 +35,14 @@ class About extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
+      <div className={classes.root}>
+        <Typography {...typoProps.subTitle} className={classes.subTitle}>
+          A little about us...
+        </Typography>
         <Typography {...typoProps.para} className={classes.para}>
-          This is a not for profit organisation. No payments are (or will ever)
-          be made to its members and all expenses are paid directly by our
-          volunteers.
+          This campaign has been initiated by Chris Croly and Richard Seaman,
+          both of whom are qualified engineers with a background in energy
+          management.
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
           The organisation is organic which means that anyone can join and
@@ -37,9 +50,9 @@ class About extends Component {
           telling someone else about the site, you have become a member!
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
-          This campaign has been initiated by Richard Seaman and Chris Croly
-          both of whom are qualified engineers with a background in energy
-          management.
+          This is a not for profit organisation. No payments are (or will ever)
+          be made to its members and all expenses are paid directly by our
+          volunteers.
         </Typography>
       </div>
     );

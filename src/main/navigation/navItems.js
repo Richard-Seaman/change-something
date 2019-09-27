@@ -22,12 +22,6 @@ export const items = [
     position: 1
   },
   {
-    title: titles.pv,
-    link: "/pv",
-    section: 0,
-    position: 2
-  },
-  {
     title: titles.about,
     link: "/about",
     section: 1,

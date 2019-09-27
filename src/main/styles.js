@@ -22,5 +22,15 @@ export const commonStyles = {
   },
   para: {
     marginTop: "16px"
+  },
+  buttonsContainer: {
+    marginTop: "16px",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  button: {
+    marginLeft: "8px",
+    marginRight: "8px"
   }
 };

@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/styles";
 import { Switch, withRouter } from "react-router-dom";
 import { compose } from "redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 import renderRoutes from "../routes/renderRoutes";
 import pageRoutes from "../routes/pageRoutes";
@@ -12,7 +14,7 @@ import { pixels } from "../constants";
 
 const styles = theme => ({
   baseLayoutContainer: {
-    background: theme.palette.primary.light,
+    background: "white",
     display: "flex",
     flexDirection: "column",
     flexWrap: "nowrap",
@@ -24,10 +26,10 @@ const styles = theme => ({
     overflow: "auto"
   },
   baseLayoutPageContainer: {
-    paddingLeft: pixels.gobalSpacing,
-    paddingRight: pixels.gobalSpacing,
     display: "flex",
-    margin: "0 auto"
+    flexDirection: "column",
+    margin: "0 auto",
+    alignItems: "center"
   }
 });
 
@@ -43,6 +45,7 @@ class BaseLayout extends Component {
             <Switch>{renderRoutes(pageRoutes)}</Switch>
           </div>
         </div>
+        <ToastContainer />
       </div>
     );
   }
