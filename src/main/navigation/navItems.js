@@ -1,7 +1,7 @@
 export const titles = {
   home: "Change Something",
   pledges: "Pledges",
-  pv: "PV Scheme",
+  campaign: "Campaign",
   about: "About",
   contact: "Contact",
   privacy: "Privacy",
@@ -20,6 +20,12 @@ export const items = [
     link: "/pledges",
     section: 0,
     position: 1
+  },
+  {
+    title: titles.campaign,
+    link: "/campaign",
+    section: 0,
+    position: 2
   },
   {
     title: titles.about,

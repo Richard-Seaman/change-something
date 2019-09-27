@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import Grid from "@material-ui/core/Grid";
 
 import { titles } from "../../navigation/navItems";
 import { setTitle } from "../../store/actions/NavActions";
@@ -28,7 +29,7 @@ const styles = theme => {
       padding: "0 16px"
     },
     button: {
-      margin: "16px auto"
+      margin: "16px"
     },
     featureImageContainer: {
       height: "400px",
@@ -49,7 +50,10 @@ const styles = theme => {
       display: "flex",
       flexDirection: "column"
     },
-    actionButtonContainer: {},
+    actionButtonContainer: {
+      display: "flex",
+      flexDirection: "row"
+    },
     tabsContainer: {
       margin: "0 16px"
     }
@@ -272,6 +276,14 @@ class Home extends Component {
             onClick={() => history.push("/pledges")}
           >
             I'm ready to Change Something
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => history.push("/campaign")}
+          >
+            Renewable Energy Campaign
           </Button>
         </div>
         <div className={classes.tabsContainer}>

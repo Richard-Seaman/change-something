@@ -21,7 +21,8 @@ const styles = theme => {
       paddingBottom: "16px",
       paddingLeft: pixels.gobalSpacing,
       paddingRight: pixels.gobalSpacing,
-      maxWidth: "1500px"
+      maxWidth: "1500px",
+      width: "100%"
     }
   };
 };
@@ -41,10 +42,15 @@ class Disclaimer extends Component {
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
           Nothing on this site shall be construed as legal, financial or
-          construction advice. Individuals take full responsibility for any
-          action taken as a result of reading this website or committing to any
-          actions as a result. Any construction or DIY activity has associated
-          risks and should only be carried out by a competent individual.
+          construction advice.
+        </Typography>
+        <Typography {...typoProps.para} className={classes.para}>
+          Individuals take full responsibility for any action taken as a result
+          of reading this website or committing to any actions as a result.
+        </Typography>
+        <Typography {...typoProps.para} className={classes.para}>
+          Any construction or DIY activity has associated risks and should only
+          be carried out by a competent individual.
         </Typography>
       </div>
     );
