@@ -280,7 +280,6 @@ class Home extends Component {
             onChange={this.handleChangeTab}
             indicatorColor="primary"
             textColor="primary"
-            centered
             variant="scrollable"
           >
             <Tab label="INTRODUCTION" />
