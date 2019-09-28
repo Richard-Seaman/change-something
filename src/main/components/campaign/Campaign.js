@@ -6,12 +6,18 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import Button from "@material-ui/core/Button";
 
 import { titles } from "../../navigation/navItems";
 import { setTitle } from "../../store/actions/NavActions";
 import { typoProps } from "../../constants";
 import { commonStyles } from "../../styles";
 import PayPal from "../widgets/PayPal";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const styles = theme => {
   return {
@@ -49,18 +55,23 @@ const styles = theme => {
       display: "flex",
       flexDirection: "column"
     },
-    actionButtonContainer: {
-      marginTop: "16px"
-    },
+    actionButtonContainer: {},
     tabsContainer: {
       margin: "0 16px"
+    },
+    paypalContainer: {
+      margin: "16px",
+      marginTop: "32px",
+      display: "flex",
+      justifyContent: "center"
     }
   };
 };
 
 class Campaign extends Component {
   state = {
-    tabIndex: 0
+    tabIndex: 0,
+    open: false
   };
 
   componentDidMount() {
@@ -70,6 +81,14 @@ class Campaign extends Component {
 
   handleChangeTab = (event, newValue) => {
     this.setState({ tabIndex: newValue });
+  };
+
+  handleShowDialog = () => {
+    this.setState({ open: true });
+  };
+
+  handleHideDialog = () => {
+    this.setState({ open: false });
   };
 
   renderIntroduction() {
@@ -129,7 +148,7 @@ class Campaign extends Component {
           where every cent invested goes directly towards renewable energy.
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
-          It costs as little as €2 each time you play and when the total fund is
+          It costs as little as €5 each time you play and when the total fund is
           large enough, someone will randomly be selected to receive assistance
           with a PV (electric solar panel) installation. If you do not want to
           install PV or don't have a suitable house then you can nominate
@@ -192,6 +211,41 @@ class Campaign extends Component {
     );
   }
 
+  renderDialog() {
+    const { classes } = this.props;
+    const { open } = this.state;
+    return (
+      <Dialog
+        open={open}
+        onClose={this.handleHideDialog}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">
+          {"Contribute To Renewables"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Please note that Paypal makes a fixed fee for credit card processing
+            irrespective of the value donated. As the fees reduce the renewable
+            energy pot please consider the following:
+          </DialogContentText>
+          <DialogContentText id="alert-dialog-description">
+            1 - If you pay directly through a Paypal account{" "}
+            <u>there is no credit card fee</u> charged to the pot
+          </DialogContentText>
+          <DialogContentText id="alert-dialog-description">
+            2 - The larger the individual payment the smaller the percentage
+            charge, so putting €10 into the pot in one go incurs lower fees than
+            adding €5 twice
+          </DialogContentText>
+          <div className={classes.paypalContainer}>
+            <PayPal></PayPal>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   render() {
     const { classes } = this.props;
     const { tabIndex } = this.state;
@@ -210,7 +264,14 @@ class Campaign extends Component {
           </div>
         </div>
         <div className={classes.actionButtonContainer}>
-          <PayPal></PayPal>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={this.handleShowDialog}
+          >
+            I'd like to Contribute
+          </Button>
         </div>
         <div className={classes.tabsContainer}>
           <Tabs
@@ -228,6 +289,7 @@ class Campaign extends Component {
         {tabIndex === 0 && this.renderIntroduction()}
         {tabIndex === 1 && this.renderHowThisWorks()}
         {tabIndex === 2 && this.renderTermsAndConditions()}
+        {this.renderDialog()}
       </div>
     );
   }
