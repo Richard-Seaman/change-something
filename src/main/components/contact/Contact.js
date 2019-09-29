@@ -9,26 +9,16 @@ import { Button } from "@material-ui/core";
 import { titles } from "../../navigation/navItems";
 import { setTitle } from "../../store/actions/NavActions";
 import { commonStyles } from "../../styles";
-import { pixels, typoProps } from "../../constants";
+import { typoProps } from "../../constants";
 import { sendMail } from "../../store/actions/ContactActions";
 
 import ValidatedField from "../widgets/ValidatedField";
 import { VALIDATORS_BY_NAME } from "../../constants";
 import { Typography } from "@material-ui/core";
+import { showLogin } from "../../store/actions/LoginActions";
 
 const styles = theme => ({
   ...commonStyles,
-  root: {
-    display: "flex",
-    flexGrow: 1,
-    marginTop: pixels.gobalSpacing,
-    flexDirection: "column",
-    paddingBottom: "16px",
-    paddingLeft: pixels.gobalSpacing,
-    paddingRight: pixels.gobalSpacing,
-    maxWidth: "1500px",
-    width: "100%"
-  },
   buttonsContainer: {
     marginTop: "16px",
     display: "flex",
@@ -132,13 +122,33 @@ class Contact extends Component {
   }
 
   renderSignIn() {
-    return <Typography>You must sign in to use the contact form</Typography>;
+    const { classes, onShowLogin } = this.props;
+    return (
+      <Grid container spacing={2} direction="row" justify="center">
+        <Grid item xs={12}>
+          <Typography {...typoProps.subTitle} className={classes.subTitle}>
+            We'd love to hear from you!
+          </Typography>
+          <Typography>You must sign in to use the contact form</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            onClick={onShowLogin}
+          >
+            Sign In
+          </Button>
+        </Grid>
+      </Grid>
+    );
   }
 
   render() {
     const { classes, email } = this.props;
     return (
-      <div className={classes.root}>
+      <div className={classes.textPageRoot}>
         {email ? this.renderContactForm() : this.renderSignIn()}
       </div>
     );
@@ -146,7 +156,8 @@ class Contact extends Component {
 }
 
 Contact.propTypes = {
-  onSetTitle: PropTypes.func.isRequired
+  onSetTitle: PropTypes.func.isRequired,
+  onShowLogin: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -158,6 +169,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onShowLogin: () => dispatch(showLogin()),
     onSetTitle: title => dispatch(setTitle(title)),
     onSendMail: () => dispatch(sendMail())
   };

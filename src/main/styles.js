@@ -14,6 +14,23 @@ export const commonStyles = {
     display: "flex",
     background: colors.grey2
   },
+  mainPageRoot: {
+    paddingBottom: "32px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+  textPageRoot: {
+    display: "flex",
+    flexGrow: 1,
+    marginTop: pixels.gobalSpacing,
+    flexDirection: "column",
+    paddingBottom: "16px",
+    paddingLeft: pixels.gobalSpacing,
+    paddingRight: pixels.gobalSpacing,
+    maxWidth: "1500px",
+    width: "100%"
+  },
   title: {
     marginTop: "32px"
   },
@@ -29,8 +46,38 @@ export const commonStyles = {
     flexDirection: "row",
     alignItems: "center"
   },
+  contentContainer: {
+    maxWidth: "1500px",
+    margin: "0 16px",
+    padding: "0 16px"
+  },
   button: {
-    marginLeft: "8px",
-    marginRight: "8px"
+    margin: "16px"
+  },
+  featureImageContainer: {
+    height: "400px",
+    width: "100%",
+    position: "relative"
+  },
+  featureImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover"
+  },
+  imageOverlayContainer: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    color: "white",
+    display: "flex",
+    flexDirection: "column"
+  },
+  actionButtonContainer: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  tabsContainer: {
+    margin: "0 16px"
   }
 };

@@ -14,7 +14,6 @@ import { typoProps } from "../../constants";
 import { commonStyles } from "../../styles";
 import PayPal from "../widgets/PayPal";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -22,43 +21,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 const styles = theme => {
   return {
     ...commonStyles,
-    root: {
-      paddingBottom: "32px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center"
-    },
-    contentContainer: {
-      maxWidth: "1500px",
-      margin: "0 16px",
-      padding: "0 16px"
-    },
-    button: {
-      margin: "16px auto"
-    },
-    featureImageContainer: {
-      height: "400px",
-      width: "100%",
-      position: "relative"
-    },
-    featureImage: {
-      width: "100%",
-      height: "100%",
-      objectFit: "cover"
-    },
-    imageOverlayContainer: {
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      color: "white",
-      display: "flex",
-      flexDirection: "column"
-    },
-    actionButtonContainer: {},
-    tabsContainer: {
-      margin: "0 16px"
-    },
     paypalContainer: {
       margin: "16px",
       marginTop: "32px",
@@ -250,7 +212,7 @@ class Campaign extends Component {
     const { classes } = this.props;
     const { tabIndex } = this.state;
     return (
-      <div className={classes.root}>
+      <div className={classes.mainPageRoot}>
         <div className={classes.featureImageContainer}>
           <img
             className={classes.featureImage}

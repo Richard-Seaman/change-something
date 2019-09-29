@@ -16,47 +16,7 @@ import { commonStyles } from "../../styles";
 
 const styles = theme => {
   return {
-    ...commonStyles,
-    root: {
-      paddingBottom: "32px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center"
-    },
-    contentContainer: {
-      maxWidth: "1500px",
-      margin: "0 16px",
-      padding: "0 16px"
-    },
-    button: {
-      margin: "16px"
-    },
-    featureImageContainer: {
-      height: "400px",
-      width: "100%",
-      position: "relative"
-    },
-    featureImage: {
-      width: "100%",
-      height: "100%",
-      objectFit: "cover"
-    },
-    imageOverlayContainer: {
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      color: "white",
-      display: "flex",
-      flexDirection: "column"
-    },
-    actionButtonContainer: {
-      display: "flex",
-      flexDirection: "row"
-    },
-    tabsContainer: {
-      margin: "0 16px"
-    }
+    ...commonStyles
   };
 };
 
@@ -255,7 +215,7 @@ class Home extends Component {
     const { classes, history } = this.props;
     const { tabIndex } = this.state;
     return (
-      <div className={classes.root}>
+      <div className={classes.mainPageRoot}>
         <div className={classes.featureImageContainer}>
           <img
             className={classes.featureImage}
