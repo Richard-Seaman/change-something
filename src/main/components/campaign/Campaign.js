@@ -155,8 +155,10 @@ class Campaign extends Component {
           the person receiving the support. The person receiving the funding
           will also be able to avail of any grants available from SEAI for the
           installation. Should the person nominated not wish to proceed within a
-          four month period they must nominate another person or an alternative
-          person will be appointed.
+          two week period they must nominate another person or an alternative
+          person will be appointed. Once the person has confirmed that they wish
+          to proceed with the project, they must have a system on order within 3
+          months, or they shall forfeit the funding.
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
           The payment of tax on amounts received will be the responsibility of
@@ -221,7 +223,10 @@ class Campaign extends Component {
           />
           <div className={classes.imageOverlayContainer}>
             <Typography {...typoProps.imageTextOverlay}>
-              100% CONTRIBUTION TO RENEWABLES
+              CROWDFUNDING THE SOLAR REVOLUTION
+            </Typography>
+            <Typography {...typoProps.imageTextSubtitle}>
+              WIN A SOLAR PANEL TOP UP GRANT
             </Typography>
           </div>
         </div>

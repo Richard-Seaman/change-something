@@ -71,7 +71,8 @@ export const commonStyles = {
     transform: "translate(-50%, -50%)",
     color: "white",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    alignItems: "center"
   },
   actionButtonContainer: {
     display: "flex",

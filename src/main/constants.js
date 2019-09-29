@@ -59,6 +59,11 @@ export const typoProps = {
     variant: "h3",
     color: "inherit",
     align: "center"
+  },
+  imageTextSubtitle: {
+    variant: "h5",
+    color: "inherit",
+    align: "center"
   }
 };
 
