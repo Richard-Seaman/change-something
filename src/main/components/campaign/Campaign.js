@@ -219,7 +219,7 @@ class Campaign extends Component {
           <img
             className={classes.featureImage}
             src="/images/pv-min.jpg"
-            alt="Irish Countryside"
+            alt="PV Panles"
           />
           <div className={classes.imageOverlayContainer}>
             <Typography {...typoProps.imageTextOverlay}>
