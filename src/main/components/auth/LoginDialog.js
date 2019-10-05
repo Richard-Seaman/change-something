@@ -16,13 +16,33 @@ import {
 } from "react-social-login-buttons";
 
 import { hideLogin } from "../../store/actions/LoginActions";
+import { titles } from "../../navigation/navItems";
+import { toastSuccess, toastError } from "../../store/actions/ToastActions";
 
-const styles = theme => ({});
+const styles = theme => ({
+  socialButtonsContainer: {
+    margin: "30px auto 0 auto",
+    maxWidth: "250px"
+  }
+});
 
 class LoginDialog extends Component {
   handleLogout = () => {
     const { firebase } = this.props;
     firebase.logout();
+  };
+
+  handleLoginSuccess = res => {
+    const { onHideLogin, onToastSuccess } = this.props;
+    onToastSuccess("Signed in successfully!");
+    onHideLogin();
+  };
+
+  handleLoginError = err => {
+    const { onHideLogin, onToastError } = this.props;
+    console.error("Sign in failed!", err);
+    onToastError("Oops, something went wrong!");
+    onHideLogin();
   };
 
   renderLoggedIn = () => {
@@ -42,21 +62,57 @@ class LoginDialog extends Component {
   };
 
   renderLoggedOut = () => {
-    const { firebase } = this.props;
+    const { firebase, classes, title } = this.props;
+    const isSignInForContact = title === titles.contact;
     return (
       <Fragment>
         <DialogTitle id="form-dialog-title">{"Sign In"}</DialogTitle>
         <DialogContent>
-          <GoogleLoginButton
-            onClick={() =>
-              firebase.login({ provider: "google", type: "popup" })
-            }
-          />
-          <FacebookLoginButton
-            onClick={() =>
-              firebase.login({ provider: "facebook", type: "popup" })
-            }
-          />
+          <DialogContentText>
+            {isSignInForContact
+              ? "You must sign in to use the contact form."
+              : "You must sign in to make a commitment."}
+          </DialogContentText>
+          {!isSignInForContact && (
+            <div>
+              <DialogContentText>Signing in ensures that:</DialogContentText>
+              <ul>
+                <li>
+                  <DialogContentText>
+                    real people are making real commitments
+                  </DialogContentText>
+                </li>
+                <li>
+                  <DialogContentText>
+                    your commitments are stored for your next visit
+                  </DialogContentText>
+                </li>
+                <li>
+                  <DialogContentText>
+                    commitments are only counted once
+                  </DialogContentText>
+                </li>
+              </ul>
+            </div>
+          )}
+          <div className={classes.socialButtonsContainer}>
+            <GoogleLoginButton
+              onClick={() =>
+                firebase
+                  .login({ provider: "google", type: "popup" })
+                  .then(res => this.handleLoginSuccess(res))
+                  .catch(err => this.handleLoginError(err))
+              }
+            />
+            <FacebookLoginButton
+              onClick={() =>
+                firebase
+                  .login({ provider: "facebook", type: "popup" })
+                  .then(res => this.handleLoginSuccess(res))
+                  .catch(err => this.handleLoginError(err))
+              }
+            />
+          </div>
         </DialogContent>
       </Fragment>
     );
@@ -80,7 +136,7 @@ class LoginDialog extends Component {
             </Button>
             {uid && (
               <Button onClick={this.handleLogout} color="primary">
-                Logout
+                Sign Out
               </Button>
             )}
           </DialogActions>
@@ -103,13 +159,16 @@ LoginDialog.propTypes = {
 const mapStateToProps = state => {
   return {
     auth: state.firebase.auth,
-    isOpen: state.login.isOpen
+    isOpen: state.login.isOpen,
+    title: state.nav.title
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onHideLogin: () => dispatch(hideLogin())
+    onHideLogin: () => dispatch(hideLogin()),
+    onToastSuccess: message => dispatch(toastSuccess(message)),
+    onToastError: message => dispatch(toastError(message))
   };
 };
 
