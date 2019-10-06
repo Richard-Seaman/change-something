@@ -23,6 +23,14 @@ const styles = theme => ({
   socialButtonsContainer: {
     margin: "30px auto 0 auto",
     maxWidth: "250px"
+  },
+  dataProtectionLinkContainer: {
+    display: "flex",
+    justifyContent: "center",
+    fontSize: "small",
+    marginTop: "8px",
+    color: "blue",
+    cursor: "pointer"
   }
 });
 
@@ -43,6 +51,12 @@ class LoginDialog extends Component {
     console.error("Sign in failed!", err);
     onToastError("Oops, something went wrong!");
     onHideLogin();
+  };
+
+  handleShowDataProtection = () => {
+    const { onHideLogin, history } = this.props;
+    onHideLogin();
+    history.push("/privacy");
   };
 
   renderLoggedIn = () => {
@@ -112,6 +126,12 @@ class LoginDialog extends Component {
                   .catch(err => this.handleLoginError(err))
               }
             />
+            <div
+              className={classes.dataProtectionLinkContainer}
+              onClick={this.handleShowDataProtection}
+            >
+              <u>Data Protection Policy</u>
+            </div>
           </div>
         </DialogContent>
       </Fragment>

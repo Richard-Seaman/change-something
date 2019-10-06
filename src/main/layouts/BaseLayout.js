@@ -38,7 +38,7 @@ class BaseLayout extends Component {
     const { classes, history } = this.props;
     return (
       <div className={classes.baseLayoutContainer}>
-        <TopAppBar />
+        <TopAppBar history={history} />
         <NavDrawer history={history} />
         <div className={classes.baseLayoutContentContainer}>
           <div className={classes.baseLayoutPageContainer}>

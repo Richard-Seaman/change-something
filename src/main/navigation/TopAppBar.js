@@ -28,7 +28,13 @@ const styles = theme => ({
 
 class TopAppBar extends React.Component {
   render() {
-    const { classes, onShowLogin, onShowNavDrawer, title } = this.props;
+    const {
+      classes,
+      onShowLogin,
+      onShowNavDrawer,
+      title,
+      history
+    } = this.props;
     return (
       <div className={classes.root}>
         <AppBar position="fixed">
@@ -54,7 +60,7 @@ class TopAppBar extends React.Component {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <LoginDialog />
+        <LoginDialog history={history} />
       </div>
     );
   }

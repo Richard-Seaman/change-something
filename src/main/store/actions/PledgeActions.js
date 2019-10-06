@@ -3,12 +3,7 @@ import { collections, storedAs } from "../firebaseConfig";
 import history from "../../utils/history";
 import { paths } from "../../routes/constants";
 import { MIDDLEWARE_VALIDATE } from "../actions/types";
-import {
-  toastError,
-  toastInfo,
-  toastSuccess,
-  toastWarning
-} from "./ToastActions";
+import { toastError, toastSuccess } from "./ToastActions";
 
 export const incrementCounter = (collection, docId, field, number) => {
   return (dispatch, getState, { getFirestore }) => {
