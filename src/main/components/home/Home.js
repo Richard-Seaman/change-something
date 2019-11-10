@@ -44,13 +44,13 @@ class Home extends Component {
           associated environmental impact.
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
-          Europe has made commitments to reduce its energy usage by 2020 and is
-          currently failing to achieve its own target. Likewise, Ireland is not
-          currently on target to meet its commitments. One response is to blame
-          those responsible for policy but this campaign is designed to take
-          matters into our own hands by making a change at an individual level.
-          Making real changes in our impact has a direct reduction in energy
-          usage but also sends a strong message to policy makers that we
+          While Europe is likely to meet it’s commitment to reduce greenhouse
+          gas emissions by 20% relative to 1990 by 2020, Ireland does not appear
+          to be on track to achieve its 2020 commitments. One response is to
+          blame those responsible for policy but this campaign is designed to
+          take matters into our own hands by making a change at an individual
+          level. Making real changes in our impact has a direct reduction in
+          energy usage but also sends a strong message to policy makers that we
           understand and support the implications of change.
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
