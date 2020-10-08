@@ -11,9 +11,9 @@ import { setTitle } from "../../store/actions/NavActions";
 import { typoProps } from "../../constants";
 import { commonStyles } from "../../styles";
 
-const styles = theme => {
+const styles = (theme) => {
   return {
-    ...commonStyles
+    ...commonStyles,
   };
 };
 
@@ -50,18 +50,6 @@ class Privacy extends Component {
           unsubscribe from our email list.
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
-          If donating to the Photovoltaic crowdfund campaign, all financial
-          information will be handled directly on the Paypal website. We will
-          never receive and will never store any of your banking information.
-          Paypal will provide your name, email address and if you choose to
-          enter it your home address may be provided (this can be left blank as
-          it is not required). The email address will be stored and used to
-          contact you should the opportunity arise to offer you funding. We may
-          very rarely send an email reminding of the campaign or letting you
-          know how it is progressing. Any such email will be sent only
-          occasionally and will contain an unsubscribe option.
-        </Typography>
-        <Typography {...typoProps.para} className={classes.para}>
           If you have any queries about how your data is stored or handled,
           please do not hesitate to <Link to="/contact">contact us</Link>.
         </Typography>
@@ -71,23 +59,20 @@ class Privacy extends Component {
 }
 
 Privacy.propTypes = {
-  onSetTitle: PropTypes.func.isRequired
+  onSetTitle: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    onSetTitle: title => dispatch(setTitle(title))
+    onSetTitle: (title) => dispatch(setTitle(title)),
   };
 };
 
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
   withStyles(styles)
 )(Privacy);

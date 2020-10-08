@@ -46,5 +46,8 @@
       "last 1 safari version",
       "last 1 ie version"
     ]
+  },
+  "devDependencies": {
+    "eslint-plugin-promise": "^4.2.1"
   }
 }
