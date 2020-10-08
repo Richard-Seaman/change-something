@@ -13,15 +13,15 @@ import { setTitle } from "../../store/actions/NavActions";
 import { typoProps } from "../../constants";
 import { commonStyles } from "../../styles";
 
-const styles = theme => {
+const styles = (theme) => {
   return {
-    ...commonStyles
+    ...commonStyles,
   };
 };
 
 class Home extends Component {
   state = {
-    tabIndex: 0
+    tabIndex: 0,
   };
 
   componentDidMount() {
@@ -44,13 +44,13 @@ class Home extends Component {
           associated environmental impact.
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
-          While Europe is likely to meet it’s commitment to reduce greenhouse
-          gas emissions by 20% relative to 1990 by 2020, Ireland does not appear
-          to be on track to achieve its 2020 commitments. One response is to
-          blame those responsible for policy but this campaign is designed to
-          take matters into our own hands by making a change at an individual
-          level. Making real changes in our impact has a direct reduction in
-          energy usage but also sends a strong message to policy makers that we
+          While Europe is likely to meet its commitment to reduce greenhouse gas
+          emissions by 20% relative to 1990 by 2020, Ireland does not appear to
+          be on track to achieve its 2020 commitments. One response is to blame
+          those responsible for policy but this campaign is designed to take
+          matters into our own hands by making a change at an individual level.
+          Making real changes in our impact has a direct reduction in energy
+          usage but also sends a strong message to policy makers that we
           understand and support the implications of change.
         </Typography>
         <Typography {...typoProps.para} className={classes.para}>
@@ -236,14 +236,6 @@ class Home extends Component {
           >
             I'm ready to Change Something
           </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={() => history.push("/campaign")}
-          >
-            Renewable Energy Campaign
-          </Button>
         </div>
         <div className={classes.tabsContainer}>
           <Tabs
@@ -269,23 +261,20 @@ class Home extends Component {
 }
 
 Home.propTypes = {
-  onSetTitle: PropTypes.func.isRequired
+  onSetTitle: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    onSetTitle: title => dispatch(setTitle(title))
+    onSetTitle: (title) => dispatch(setTitle(title)),
   };
 };
 
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
   withStyles(styles)
 )(Home);
